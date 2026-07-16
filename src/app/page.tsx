@@ -105,6 +105,36 @@ export default function Home() {
   const [projectDetailsPosition, setProjectDetailsPosition] =
     useState<WindowPosition | null>(null);
 
+   function showDesktop() {
+  if (welcomeOpen) {
+    setWelcomeMinimized(true);
+  }
+
+  if (aboutOpen) {
+    setAboutMinimized(true);
+  }
+
+  if (projectsOpen) {
+    setProjectsMinimized(true);
+  }
+
+  if (resumeOpen) {
+    setResumeMinimized(true);
+  }
+
+  if (contactOpen) {
+    setContactMinimized(true);
+  }
+
+  if (selectedProject) {
+    setProjectDetailsMinimized(true);
+  }
+
+  setStartMenuOpen(false);
+  setSelectedDesktopIcon(null);
+  setActiveWindow("welcome");
+}
+    
   function handleDesktopBackgroundClick(event: ReactMouseEvent<HTMLElement>) {
     if (event.target === event.currentTarget) {
       setSelectedDesktopIcon(null);
@@ -1210,14 +1240,24 @@ export default function Home() {
           <span>start</span>
         </button>
         <div className="quick-launch">
-          <button type="button" aria-label="Show desktop">
-            🖥️
-          </button>
+  <button
+    type="button"
+    aria-label="Show desktop"
+    title="Show Desktop"
+    onClick={showDesktop}
+  >
+    <span aria-hidden="true">🖥️</span>
+  </button>
 
-          <button type="button" aria-label="Open portfolio">
-            🌐
-          </button>
-        </div>
+  <button
+    type="button"
+    aria-label="Open Kabir's Portfolio"
+    title="Kabir's Portfolio"
+    onClick={openWelcomeWindow}
+  >
+    <span aria-hidden="true">🌐</span>
+  </button>
+</div>
 
         {welcomeOpen && (
           <button

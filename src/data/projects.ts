@@ -75,7 +75,7 @@ export const projects: PortfolioProject[] = [
       "TypeScript types and component properties.",
       "Responsive interface design.",
     ],
-    githubUrl: "",
+    githubUrl: "https://github.com/Kabir-Bisanal/KABIR-XP-PORTFOLIO",
     demoUrl: "",
   },
   {

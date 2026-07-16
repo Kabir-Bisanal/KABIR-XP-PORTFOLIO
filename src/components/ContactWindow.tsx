@@ -197,13 +197,21 @@ ${formData.message}`,
             </div>
 
             <div className="contact-detail">
-              <span aria-hidden="true">💻</span>
+  <span aria-hidden="true">💻</span>
 
-              <div>
-                <strong>GitHub</strong>
-                <p>Add your GitHub link later</p>
-              </div>
-            </div>
+  <div>
+    <strong>GitHub</strong>
+
+    <a
+      className="contact-profile-link"
+      href="https://github.com/Kabir-Bisanal"
+      target="_blank"
+      rel="noreferrer"
+    >
+      github.com/Kabir-Bisanal
+    </a>
+  </div>
+</div>
 
             <div className="contact-detail">
               <span aria-hidden="true">🔗</span>

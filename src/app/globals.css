@@ -620,11 +620,29 @@ button {
 }
 
 .quick-launch button {
-  padding: 4px;
+  display: grid;
+  width: 29px;
+  height: 29px;
+  place-items: center;
+  padding: 0;
   color: white;
   font-size: 16px;
   background: transparent;
-  border: 0;
+  border: 1px solid transparent;
+  border-radius: 2px;
+}
+
+.quick-launch button:hover,
+.quick-launch button:focus-visible {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.45);
+  outline: none;
+}
+
+.quick-launch button:active {
+  background: rgba(0, 0, 0, 0.18);
+  border-color: rgba(0, 0, 0, 0.35);
+  box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.35);
 }
 
 .active-task {
@@ -2271,4 +2289,34 @@ button {
     cursor: default;
     touch-action: auto;
   }
+}
+/* =========================================
+   PROFESSIONAL PROFILE LINKS
+========================================= */
+
+.contact-profile-link {
+  display: inline-block;
+  margin-top: 2px;
+  color: #215dc6;
+  font-size: 10px;
+  line-height: 1.4;
+  text-decoration: none;
+  word-break: break-word;
+}
+
+.contact-profile-link:hover,
+.contact-profile-link:focus-visible {
+  text-decoration: underline;
+  outline: none;
+}
+
+.resume-contact-row a {
+  color: #215dc6;
+  text-decoration: none;
+}
+
+.resume-contact-row a:hover,
+.resume-contact-row a:focus-visible {
+  text-decoration: underline;
+  outline: none;
 }

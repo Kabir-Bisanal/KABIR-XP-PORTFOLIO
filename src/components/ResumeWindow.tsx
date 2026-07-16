@@ -197,11 +197,20 @@ export default function ResumeWindow({
           </header>
 
           <div className="resume-contact-row">
-            <span>📍 Karnataka, India</span>
-            <span>✉️ Email will be added</span>
-            <span>🔗 LinkedIn will be added</span>
-            <span>💻 GitHub will be added</span>
-          </div>
+  <span>📍 Karnataka, India</span>
+
+  <span>✉️ Email will be added</span>
+
+  <span>🔗 LinkedIn will be added</span>
+
+  <a
+    href="https://github.com/Kabir-Bisanal"
+    target="_blank"
+    rel="noreferrer"
+  >
+    💻 github.com/Kabir-Bisanal
+  </a>
+</div>
 
           <section className="resume-section">
             <h2>Professional Summary</h2>
