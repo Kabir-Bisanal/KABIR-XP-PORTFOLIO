@@ -256,6 +256,7 @@ export default function Home() {
       return;
     }
 
+
     if ((event.target as HTMLElement).closest(".window-controls")) {
       return;
     }
@@ -301,7 +302,7 @@ export default function Home() {
   }
 
   function openProjectsWindow() {
-    setProjectsOpen(true);
+    setProjectsOpen(true)
     setProjectsMinimized(false);
     setActiveWindow("projects");
     setStartMenuOpen(false);
@@ -1226,7 +1227,7 @@ export default function Home() {
         onOpenResume={openResumeWindow}
         onOpenContact={openContactWindow}
       />
-
+ 
       {/* Taskbar */}
       <footer className="taskbar">
         <button
