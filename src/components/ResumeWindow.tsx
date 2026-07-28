@@ -31,6 +31,8 @@ const technicalSkills = [
   "GitHub",
   "Playwright",
 ];
+const resumeFilePath =
+  "/resume/Kabir_Bisanal_Resume.pdf";
 
 export default function ResumeWindow({
   isActive,
@@ -105,11 +107,27 @@ export default function ResumeWindow({
       </div>
 
       <div className="resume-toolbar">
-        <button type="button">← Back</button>
-        <button type="button">→ Forward</button>
-        <button type="button">🔍 Search</button>
-        <button type="button">📁 Folders</button>
-      </div>
+  <button type="button">← Back</button>
+
+  <button type="button">→ Forward</button>
+
+  <a
+    href={resumeFilePath}
+    target="_blank"
+    rel="noreferrer"
+    className="resume-toolbar-link"
+  >
+    👁️ Open PDF
+  </a>
+
+  <a
+    href={resumeFilePath}
+    download="Kabir_Bisanal_Resume.pdf"
+    className="resume-toolbar-link"
+  >
+    💾 Download
+  </a>
+</div>
 
       <div className="address-bar">
         <span>Address</span>
@@ -154,31 +172,48 @@ export default function ResumeWindow({
           </div>
 
           <div className="resume-sidebar-box">
-            <h3>Document Details</h3>
+  <h3>Document Details</h3>
 
-            <p>
-              <strong>File:</strong>
-              <br />
-              Kabir_Bisanal_Resume.pdf
-            </p>
+  <p>
+    <strong>File:</strong>
+    <br />
+    Kabir_Bisanal_Resume.pdf
+  </p>
 
-            <p>
-              <strong>Document type:</strong>
-              <br />
-              Professional Resume
-            </p>
+  <p>
+    <strong>Document type:</strong>
+    <br />
+    Professional Resume
+  </p>
 
-            <p>
-              <strong>Status:</strong>
-              <br />
-              Available for opportunities
-            </p>
-          </div>
+  <p>
+    <strong>Status:</strong>
+    <br />
+    Available for opportunities
+  </p>
+
+  <div className="resume-sidebar-actions">
+    <a
+      href={resumeFilePath}
+      target="_blank"
+      rel="noreferrer"
+    >
+      📄 Open Resume
+    </a>
+
+    <a
+      href={resumeFilePath}
+      download="Kabir_Bisanal_Resume.pdf"
+    >
+      💾 Download Resume
+    </a>
+  </div>
+</div>
 
           <div className="resume-note">
-            The downloadable PDF version will be connected after your final
-            résumé is added to the project.
-          </div>
+  This résumé preview is also available as a downloadable PDF.
+  Recruiters can open or save the document using the buttons above.
+</div>
         </aside>
 
         <article className="resume-document">
@@ -196,19 +231,22 @@ export default function ResumeWindow({
             </div>
           </header>
 
-          <div className="resume-contact-row">
-  <span>📍 Karnataka, India</span>
-
-  <span>✉️ Email will be added</span>
-
-  <span>🔗 LinkedIn will be added</span>
-
+          <div className="resume-document-actions">
   <a
-    href="https://github.com/Kabir-Bisanal"
+    href={resumeFilePath}
     target="_blank"
     rel="noreferrer"
+    className="xp-button resume-action-link"
   >
-    💻 github.com/Kabir-Bisanal
+    Open PDF Resume
+  </a>
+
+  <a
+    href={resumeFilePath}
+    download="Kabir_Bisanal_Resume.pdf"
+    className="xp-button resume-action-link"
+  >
+    Download Resume
   </a>
 </div>
 
