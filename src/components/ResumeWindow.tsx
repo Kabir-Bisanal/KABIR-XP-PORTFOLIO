@@ -4,11 +4,7 @@ import type { PointerEvent as ReactPointerEvent } from "react";
 import type { ProfileData } from "@/data/profile";
 import { technicalSkills } from "@/data/skills";
 import type { PortfolioProject } from "@/data/projects";
-
-type WindowPosition = {
-  x: number;
-  y: number;
-};
+import type { WindowPosition } from "@/types/window";
 
 type ResumeWindowProps = {
   projects: PortfolioProject[];
@@ -25,7 +21,7 @@ type ResumeWindowProps = {
   ) => void;
 };
 
-const resumeFilePath = "/resume/Kabir_Bisanal_Resume.pdf";
+const resumeFilePath = "/resume/Kabir-Bisanal-Resume-Updated.pdf";
 
 export default function ResumeWindow({
   profile,
@@ -126,7 +122,7 @@ export default function ResumeWindow({
 
         <a
           href={resumeFilePath}
-          download="Kabir_Bisanal_Resume.pdf"
+          download="Kabir-Bisanal-Resume-Updated.pdf"
           className="resume-toolbar-link"
         >
           💾 Download
@@ -183,7 +179,7 @@ export default function ResumeWindow({
             <p>
               <strong>File:</strong>
               <br />
-              Kabir_Bisanal_Resume.pdf
+              Kabir-Bisanal-Resume-Updated.pdf
             </p>
 
             <p>
@@ -209,7 +205,7 @@ export default function ResumeWindow({
 
               <a
                 href={resumeFilePath}
-                download="Kabir_Bisanal_Resume.pdf"
+                download="Kabir-Bisanal-Resume-Updated.pdf"
               >
                 💾 Download Resume
               </a>
@@ -289,7 +285,7 @@ export default function ResumeWindow({
 
             <a
               href={resumeFilePath}
-              download="Kabir_Bisanal_Resume.pdf"
+              download="Kabir-Bisanal-Resume-Updated.pdf"
               className="xp-button resume-action-link"
             >
               Download Resume

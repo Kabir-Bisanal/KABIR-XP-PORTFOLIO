@@ -18,12 +18,8 @@ import DesktopIcons, {
 } from "@/components/DesktopIcons";
 import { projects, type PortfolioProject } from "@/data/projects";
 import { profile } from "@/data/profile";
-type WindowName =
+import type { WindowPosition } from "@/types/window";type WindowName =
   "welcome" | "about" | "projects" | "resume" | "contact" | "projectDetails";
-type WindowPosition = {
-  x: number;
-  y: number;
-};
 
 export default function Home() {
   const [welcomeOpen, setWelcomeOpen] = useState(true);

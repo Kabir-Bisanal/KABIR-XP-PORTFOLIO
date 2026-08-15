@@ -3,10 +3,7 @@
 import type { PointerEvent as ReactPointerEvent } from "react";
 import type { ProfileData } from "@/data/profile";
 import { technicalSkills } from "@/data/skills";
-type WindowPosition = {
-  x: number;
-  y: number;
-};
+import type { WindowPosition } from "@/types/window";
 
 type AboutWindowProps = {
   profile: ProfileData;

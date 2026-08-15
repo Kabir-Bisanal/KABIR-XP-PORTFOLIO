@@ -3,10 +3,7 @@
 import { useState } from "react";
 import type { FormEvent, PointerEvent as ReactPointerEvent } from "react";
 import type { ProfileData } from "@/data/profile";
-type WindowPosition = {
-  x: number;
-  y: number;
-};
+import type { WindowPosition } from "@/types/window";
 
 type ContactWindowProps = {
   profile: ProfileData;

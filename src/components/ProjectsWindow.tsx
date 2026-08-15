@@ -2,11 +2,7 @@
 
 import type { PointerEvent as ReactPointerEvent } from "react";
 import type { PortfolioProject } from "@/data/projects";
-
-type WindowPosition = {
-  x: number;
-  y: number;
-};
+import type { WindowPosition } from "@/types/window";
 
 type ProjectsWindowProps = {
   projects: PortfolioProject[];

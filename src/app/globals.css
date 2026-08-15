@@ -2392,3 +2392,685 @@ button {
     white-space: nowrap;
   }
 }
+/* ========================================
+   REAL WINDOWS XP DESKTOP WALLPAPER
+   ======================================== */
+
+.desktop {
+  background-image: url("/images/Windows-XP-Wallpaper.jpg") !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  background-color: #3a6ea5;
+}
+
+/* Disable the old CSS-generated landscape */
+.desktop::before,
+.desktop::after {
+  display: none !important;
+}
+/* =========================================
+   RESPONSIVE WINDOWS XP LAYOUT
+   ========================================= */
+
+/*
+  Smaller laptops and tablets.
+  Give windows more usable horizontal space.
+*/
+@media (max-width: 1100px) and (min-width: 701px) {
+  .welcome-window,
+  .projects-window,
+  .about-window,
+  .resume-window,
+  .contact-window,
+  .project-details-window {
+    width: calc(100% - 60px);
+  }
+}
+
+/*
+  Tablet / narrow-window mode.
+
+  The !important values here are intentional.
+  Dragging adds left/top directly to the element as inline styles.
+  On narrow screens we reset those coordinates so a window that
+  was dragged on a large monitor cannot remain outside the viewport.
+*/
+@media (max-width: 900px) {
+  .welcome-window,
+  .projects-window,
+  .about-window,
+  .resume-window,
+  .contact-window,
+  .project-details-window {
+    top: 44px !important;
+    left: 12px !important;
+    width: calc(100% - 24px) !important;
+    max-height: calc(100dvh - 54px) !important;
+    transform: none !important;
+  }
+
+  /*
+    Maximized windows must still occupy the entire desktop area.
+  */
+  .xp-window.maximized-window {
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: calc(100dvh - 42px) !important;
+    max-height: none !important;
+    transform: none !important;
+  }
+}
+
+/* =========================================
+   MOBILE DESKTOP
+   ========================================= */
+
+@media (max-width: 700px) {
+  html,
+  body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .desktop {
+    width: 100%;
+    height: 100dvh;
+    min-height: 100dvh;
+    overflow: hidden;
+
+    /*
+      Keep the real XP wallpaper proportional.
+      Some cropping on narrow phones is expected.
+    */
+    background-size: cover !important;
+    background-position: center center !important;
+  }
+
+  /* =======================================
+     MOBILE DESKTOP ICONS
+     ======================================= */
+
+  .desktop-icons {
+    top: 10px;
+    left: 8px;
+    display: grid;
+    grid-template-columns: repeat(2, 82px);
+    gap: 8px 5px;
+  }
+
+  .desktop-icon {
+    width: 82px;
+    min-height: 70px;
+    padding: 3px;
+  }
+
+  .desktop-icon-image {
+    width: 45px;
+    height: 45px;
+    font-size: 34px;
+  }
+
+  .desktop-icon-title {
+    font-size: 11px;
+  }
+
+  /* =======================================
+     ALL MOBILE WINDOWS
+     ======================================= */
+
+  .welcome-window,
+  .projects-window,
+  .about-window,
+  .resume-window,
+  .contact-window,
+  .project-details-window {
+    top: 42px !important;
+    left: 7px !important;
+    width: calc(100% - 14px) !important;
+    max-height: calc(100dvh - 50px) !important;
+    transform: none !important;
+  }
+
+  /*
+    Maximized takes priority over normal mobile positioning.
+  */
+  .xp-window.maximized-window {
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: calc(100dvh - 42px) !important;
+    max-height: none !important;
+    transform: none !important;
+    border-radius: 0;
+  }
+
+  /* =======================================
+     TITLE BAR
+     ======================================= */
+
+  .xp-title-bar {
+    min-height: 32px;
+    padding: 3px 4px 3px 6px;
+    cursor: default;
+    touch-action: auto;
+  }
+
+  .xp-title {
+    min-width: 0;
+    font-size: 12px;
+    text-overflow: ellipsis;
+  }
+
+  .title-icon {
+    font-size: 15px;
+  }
+
+  .window-controls {
+    flex-shrink: 0;
+  }
+
+  .window-controls button {
+    width: 24px;
+    height: 23px;
+    font-size: 14px;
+  }
+
+  /* =======================================
+     WINDOW MENU
+     ======================================= */
+
+  .window-menu {
+    min-height: 26px;
+    gap: 13px;
+    padding: 0 8px;
+    overflow-x: auto;
+    font-size: 11px;
+    white-space: nowrap;
+    scrollbar-width: none;
+  }
+
+  .window-menu::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* =======================================
+     TOOLBARS
+     ======================================= */
+
+  .projects-toolbar,
+  .about-toolbar,
+  .resume-toolbar,
+  .contact-toolbar,
+  .project-details-toolbar {
+    min-height: 38px;
+    overflow-x: auto;
+    gap: 3px;
+    padding: 4px 5px;
+    white-space: nowrap;
+    scrollbar-width: none;
+  }
+
+  .projects-toolbar::-webkit-scrollbar,
+  .about-toolbar::-webkit-scrollbar,
+  .resume-toolbar::-webkit-scrollbar,
+  .contact-toolbar::-webkit-scrollbar,
+  .project-details-toolbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .projects-toolbar button,
+  .about-toolbar button,
+  .resume-toolbar button,
+  .contact-toolbar button,
+  .project-details-toolbar button,
+  .resume-toolbar-link {
+    flex-shrink: 0;
+    padding: 5px 7px;
+    font-size: 11px;
+  }
+
+  /* =======================================
+     ADDRESS BAR
+     ======================================= */
+
+  .address-bar {
+    min-height: 30px;
+    gap: 5px;
+    padding: 3px 5px;
+  }
+
+  .address-input {
+    min-width: 0;
+    height: 23px;
+    font-size: 10px;
+    text-overflow: ellipsis;
+  }
+
+  .address-bar > button {
+    flex-shrink: 0;
+    height: 23px;
+    padding: 0 7px;
+  }
+
+  /* =======================================
+     MAIN WINDOW CONTENT
+     ======================================= */
+
+  .projects-content,
+  .about-content,
+  .resume-content,
+  .contact-content,
+  .project-details-content {
+    display: block;
+    min-height: 0;
+    max-height: calc(100dvh - 225px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  /*
+    Sidebars take too much room on phone screens.
+    The information remains available in the main content.
+  */
+  .projects-sidebar,
+  .resume-sidebar,
+  .contact-sidebar,
+  .project-details-sidebar {
+    display: none;
+  }
+
+  /* About sidebar contains useful profile information,
+     so keep it instead of hiding it. */
+  .about-sidebar {
+    display: block;
+    padding: 14px;
+  }
+
+  .about-profile-picture {
+    width: 80px;
+    height: 90px;
+    margin-bottom: 10px;
+    font-size: 25px;
+  }
+
+  .about-sidebar > h2 {
+    font-size: 16px;
+  }
+
+  .about-role {
+    margin-bottom: 12px;
+  }
+
+  .about-sidebar-section {
+    max-width: 340px;
+    margin: 0 auto;
+  }
+
+  /* =======================================
+     WELCOME WINDOW
+     ======================================= */
+
+  .window-content {
+    display: flex;
+    min-height: 0;
+    max-height: calc(100dvh - 135px);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 18px;
+    overflow-y: auto;
+  }
+
+  .profile-placeholder {
+    width: 85px;
+    height: 95px;
+    font-size: 27px;
+    border-width: 5px;
+  }
+
+  .welcome-information {
+    width: 100%;
+    max-width: none;
+  }
+
+  .welcome-information h1 {
+    font-size: 27px;
+  }
+
+  .welcome-information h2 {
+    font-size: 14px;
+  }
+
+  .welcome-information p {
+    font-size: 12px;
+    line-height: 1.55;
+  }
+
+  .welcome-actions {
+    gap: 7px;
+    margin-top: 15px;
+  }
+
+  .welcome-actions .xp-button {
+    min-width: 120px;
+  }
+
+  /* =======================================
+     PROJECTS
+     ======================================= */
+
+  .projects-main {
+    padding: 12px;
+  }
+
+  .projects-main > h2 {
+    font-size: 15px;
+  }
+
+  .project-card {
+    gap: 10px;
+    padding: 10px 6px;
+  }
+
+  .project-folder-icon {
+    font-size: 34px;
+  }
+
+  .project-information {
+    min-width: 0;
+  }
+
+  .project-information h3 {
+    font-size: 14px;
+  }
+
+  .project-information p {
+    font-size: 11px;
+  }
+
+  /* =======================================
+     ABOUT
+     ======================================= */
+
+  .about-main {
+    padding: 16px;
+  }
+
+  .about-introduction h1 {
+    font-size: 26px;
+  }
+
+  .about-interest-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* =======================================
+     RESUME
+     ======================================= */
+
+  .resume-document {
+    padding: 18px 14px 30px;
+  }
+
+  .resume-header {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .resume-header h1 {
+    font-size: 25px;
+  }
+
+  .resume-header h2 {
+    font-size: 13px;
+  }
+
+  .resume-initials {
+    width: 55px;
+    height: 55px;
+    font-size: 18px;
+  }
+
+  .resume-contact-row {
+    gap: 7px 12px;
+  }
+
+  .resume-entry-heading {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  /* =======================================
+     CONTACT
+     ======================================= */
+
+  .contact-main {
+    padding: 18px 14px 30px;
+  }
+
+  .contact-heading h1 {
+    font-size: 26px;
+  }
+
+  .contact-form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  /* =======================================
+     PROJECT DETAILS
+     ======================================= */
+
+  .project-details-main {
+    padding: 18px 14px 30px;
+  }
+
+  .project-details-heading h1 {
+    font-size: 24px;
+  }
+
+  /* =======================================
+     STATUS BAR
+     ======================================= */
+
+  .window-status-bar {
+    grid-template-columns: 1fr auto;
+    min-height: 23px;
+    font-size: 10px;
+  }
+
+  .window-status-bar span {
+    padding: 2px 5px;
+  }
+
+  /* =======================================
+     TASKBAR
+     ======================================= */
+
+  .taskbar {
+    height: 42px;
+    overflow: hidden;
+  }
+
+  .start-button {
+    min-width: 88px;
+    height: 42px;
+    gap: 5px;
+    padding: 0 12px 0 8px;
+    font-size: 15px;
+  }
+
+  .start-symbol {
+    width: 20px;
+    height: 20px;
+  }
+
+  .quick-launch {
+    display: none;
+  }
+
+  /*
+    On phones, taskbar buttons become icon-only.
+    This allows several open windows without overflowing.
+  */
+  .active-task {
+    width: auto;
+    min-width: 0;
+    max-width: 42px;
+    height: 31px;
+    flex: 1 1 0;
+    justify-content: center;
+    gap: 0;
+    margin-left: 2px;
+    padding: 0 4px;
+    font-size: 0;
+  }
+
+  .active-task span {
+    font-size: 16px;
+  }
+
+  .system-tray {
+    flex-shrink: 0;
+    padding: 0 7px;
+  }
+
+  .taskbar-clock {
+    min-width: 76px;
+    gap: 4px;
+    padding: 0 5px;
+  }
+
+  .taskbar-clock-information {
+    min-width: 55px;
+  }
+
+  .taskbar-clock-information time {
+    font-size: 10px;
+  }
+
+  .taskbar-clock-date {
+    display: none;
+  }
+
+  .tray-volume {
+    font-size: 10px;
+  }
+
+  /* =======================================
+     START MENU
+     ======================================= */
+
+  .start-menu {
+    right: 0;
+    bottom: 42px;
+    left: 0;
+    width: min(390px, 100%);
+    max-height: calc(100dvh - 42px);
+    overflow-y: auto;
+  }
+
+  .start-menu-header {
+    min-height: 58px;
+  }
+
+  .start-menu-avatar {
+    width: 42px;
+    height: 42px;
+    font-size: 15px;
+  }
+
+  .start-menu-header h2 {
+    font-size: 15px;
+  }
+
+  .start-menu-body {
+    grid-template-columns: 58% 42%;
+    min-height: 0;
+  }
+
+  .start-menu-item {
+    padding: 6px 5px;
+  }
+
+  .start-menu-item small,
+  .start-menu-system-information small {
+    display: none;
+  }
+}
+
+/* =========================================
+   VERY SMALL PHONES
+   ========================================= */
+
+@media (max-width: 480px) {
+  .desktop-icons {
+    grid-template-columns: repeat(2, 76px);
+    gap: 6px 3px;
+  }
+
+  .desktop-icon {
+    width: 76px;
+    min-height: 66px;
+  }
+
+  .desktop-icon-image {
+    width: 40px;
+    height: 40px;
+    font-size: 31px;
+  }
+
+  .window-menu {
+    gap: 10px;
+    padding: 0 6px;
+    font-size: 10px;
+  }
+
+  /*
+    Save horizontal space in the address bar.
+  */
+  .address-bar > span:first-child {
+    display: none;
+  }
+
+  .project-card {
+    flex-direction: column;
+  }
+
+  .project-folder-icon {
+    font-size: 31px;
+  }
+
+  .resume-header h1 {
+    font-size: 22px;
+  }
+
+  .resume-initials {
+    width: 48px;
+    height: 48px;
+    font-size: 16px;
+  }
+
+  .contact-heading h1,
+  .about-introduction h1 {
+    font-size: 23px;
+  }
+
+  .start-button {
+    min-width: 80px;
+    padding-right: 9px;
+    font-size: 14px;
+  }
+
+  .taskbar-clock {
+    min-width: 70px;
+    padding: 0 3px;
+  }
+
+  .start-menu {
+    width: 100%;
+  }
+}
