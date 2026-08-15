@@ -773,7 +773,7 @@ button {
    ACTIVE WINDOWS
 ========================================= */
 
-.active-window {
+.xp-window.active-window {
   z-index: 15;
 }
 

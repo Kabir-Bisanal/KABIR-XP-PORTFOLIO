@@ -1,6 +1,8 @@
 "use client";
+import type { ProfileData } from "@/data/profile";
 
 type StartMenuProps = {
+  profile: ProfileData;
   isOpen: boolean;
   onClose: () => void;
   onOpenWelcome: () => void;
@@ -11,6 +13,7 @@ type StartMenuProps = {
 };
 
 export default function StartMenu({
+  profile,
   isOpen,
   onClose,
   onOpenWelcome,
@@ -31,11 +34,12 @@ export default function StartMenu({
   return (
     <section className="start-menu" aria-label="Portfolio Start menu">
       <header className="start-menu-header">
-        <div className="start-menu-avatar">KB</div>
-
+<div className="start-menu-avatar">
+  {profile.initials}
+</div>
         <div>
-          <h2>Kabir Bisanal</h2>
-          <p>Software Developer</p>
+          <h2>{profile.name}</h2>
+<p>{profile.professionalTitle}</p>
         </div>
       </header>
 
@@ -156,7 +160,7 @@ export default function StartMenu({
             <span>🎓</span>
             <span>
               <strong>Education</strong>
-              <small>Computer Science and Engineering</small>
+              <small>{profile.branch}</small>
             </span>
           </div>
 

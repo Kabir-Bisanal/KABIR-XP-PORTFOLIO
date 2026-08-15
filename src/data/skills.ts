@@ -1,0 +1,15 @@
+export const technicalSkills = [
+  "C#",
+  "Python",
+  "SQL",
+  "HTML",
+  "CSS",
+  "JavaScript",
+  "TypeScript",
+  "React",
+  "Next.js",
+  "Git",
+  "GitHub",
+  "Playwright",
+  "ASP.NET Core",
+] as const;

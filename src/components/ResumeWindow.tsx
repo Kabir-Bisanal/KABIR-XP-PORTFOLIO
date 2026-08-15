@@ -1,5 +1,9 @@
 "use client";
+
 import type { PointerEvent as ReactPointerEvent } from "react";
+import type { ProfileData } from "@/data/profile";
+import { technicalSkills } from "@/data/skills";
+import type { PortfolioProject } from "@/data/projects";
 
 type WindowPosition = {
   x: number;
@@ -7,41 +11,32 @@ type WindowPosition = {
 };
 
 type ResumeWindowProps = {
+  projects: PortfolioProject[];
+  profile: ProfileData;
   isActive: boolean;
   isMaximized: boolean;
+  position: WindowPosition | null;
   onFocus: () => void;
   onClose: () => void;
   onMinimize: () => void;
   onMaximize: () => void;
-  position: WindowPosition | null;
-  onTitleBarPointerDown: (event: ReactPointerEvent<HTMLElement>) => void;
+  onTitleBarPointerDown: (
+    event: ReactPointerEvent<HTMLElement>,
+  ) => void;
 };
 
-const technicalSkills = [
-  "C#",
-  "Python",
-  "SQL",
-  "HTML",
-  "CSS",
-  "JavaScript",
-  "TypeScript",
-  "React",
-  "Next.js",
-  "Git",
-  "GitHub",
-  "Playwright",
-];
-const resumeFilePath =
-  "/resume/Kabir_Bisanal_Resume.pdf";
+const resumeFilePath = "/resume/Kabir_Bisanal_Resume.pdf";
 
 export default function ResumeWindow({
+  profile,
+  projects,
   isActive,
   isMaximized,
+  position,
   onFocus,
   onClose,
   onMinimize,
   onMaximize,
-  position,
   onTitleBarPointerDown,
 }: ResumeWindowProps) {
   return (
@@ -60,12 +55,17 @@ export default function ResumeWindow({
       }
       onMouseDown={onFocus}
     >
-      <header className="xp-title-bar" onPointerDown={onTitleBarPointerDown}>
+      {/* Window title bar */}
+      <header
+        className="xp-title-bar"
+        onPointerDown={onTitleBarPointerDown}
+      >
         <div className="xp-title">
           <span className="title-icon" aria-hidden="true">
             📄
           </span>
-          Kabir Bisanal - Resume
+
+          {profile.name} - Resume
         </div>
 
         <div className="window-controls">
@@ -80,7 +80,9 @@ export default function ResumeWindow({
           <button
             type="button"
             aria-label={
-              isMaximized ? "Restore Resume window" : "Maximize Resume window"
+              isMaximized
+                ? "Restore Resume window"
+                : "Maximize Resume window"
             }
             onClick={onMaximize}
           >
@@ -98,6 +100,7 @@ export default function ResumeWindow({
         </div>
       </header>
 
+      {/* Windows XP menu */}
       <div className="window-menu">
         <span>File</span>
         <span>Edit</span>
@@ -106,29 +109,31 @@ export default function ResumeWindow({
         <span>Help</span>
       </div>
 
+      {/* Resume toolbar */}
       <div className="resume-toolbar">
-  <button type="button">← Back</button>
+        <button type="button">← Back</button>
 
-  <button type="button">→ Forward</button>
+        <button type="button">→ Forward</button>
 
-  <a
-    href={resumeFilePath}
-    target="_blank"
-    rel="noreferrer"
-    className="resume-toolbar-link"
-  >
-    👁️ Open PDF
-  </a>
+        <a
+          href={resumeFilePath}
+          target="_blank"
+          rel="noreferrer"
+          className="resume-toolbar-link"
+        >
+          👁️ Open PDF
+        </a>
 
-  <a
-    href={resumeFilePath}
-    download="Kabir_Bisanal_Resume.pdf"
-    className="resume-toolbar-link"
-  >
-    💾 Download
-  </a>
-</div>
+        <a
+          href={resumeFilePath}
+          download="Kabir_Bisanal_Resume.pdf"
+          className="resume-toolbar-link"
+        >
+          💾 Download
+        </a>
+      </div>
 
+      {/* Address bar */}
       <div className="address-bar">
         <span>Address</span>
 
@@ -141,148 +146,187 @@ export default function ResumeWindow({
       </div>
 
       <div className="resume-content">
+        {/* Left sidebar */}
         <aside className="resume-sidebar">
           <div className="resume-sidebar-box">
             <h3>Resume Sections</h3>
 
             <div className="resume-navigation-item">
-              <span>👤</span>
+              <span aria-hidden="true">👤</span>
               Professional Summary
             </div>
 
             <div className="resume-navigation-item">
-              <span>💼</span>
+              <span aria-hidden="true">💼</span>
               Experience
             </div>
 
             <div className="resume-navigation-item">
-              <span>🎓</span>
+              <span aria-hidden="true">🎓</span>
               Education
             </div>
 
             <div className="resume-navigation-item">
-              <span>🛠️</span>
+              <span aria-hidden="true">🛠️</span>
               Technical Skills
             </div>
 
             <div className="resume-navigation-item">
-              <span>📁</span>
+              <span aria-hidden="true">📁</span>
               Projects
             </div>
           </div>
 
           <div className="resume-sidebar-box">
-  <h3>Document Details</h3>
+            <h3>Document Details</h3>
 
-  <p>
-    <strong>File:</strong>
-    <br />
-    Kabir_Bisanal_Resume.pdf
-  </p>
+            <p>
+              <strong>File:</strong>
+              <br />
+              Kabir_Bisanal_Resume.pdf
+            </p>
 
-  <p>
-    <strong>Document type:</strong>
-    <br />
-    Professional Resume
-  </p>
+            <p>
+              <strong>Document type:</strong>
+              <br />
+              Professional Resume
+            </p>
 
-  <p>
-    <strong>Status:</strong>
-    <br />
-    Available for opportunities
-  </p>
+            <p>
+              <strong>Status:</strong>
+              <br />
+              Available for opportunities
+            </p>
 
-  <div className="resume-sidebar-actions">
-    <a
-      href={resumeFilePath}
-      target="_blank"
-      rel="noreferrer"
-    >
-      📄 Open Resume
-    </a>
+            <div className="resume-sidebar-actions">
+              <a
+                href={resumeFilePath}
+                target="_blank"
+                rel="noreferrer"
+              >
+                📄 Open Resume
+              </a>
 
-    <a
-      href={resumeFilePath}
-      download="Kabir_Bisanal_Resume.pdf"
-    >
-      💾 Download Resume
-    </a>
-  </div>
-</div>
+              <a
+                href={resumeFilePath}
+                download="Kabir_Bisanal_Resume.pdf"
+              >
+                💾 Download Resume
+              </a>
+            </div>
+          </div>
 
           <div className="resume-note">
-  This résumé preview is also available as a downloadable PDF.
-  Recruiters can open or save the document using the buttons above.
-</div>
+            This résumé preview is also available as a downloadable PDF.
+            Recruiters can open or save the document using the buttons
+            above.
+          </div>
         </aside>
 
+        {/* Main resume document */}
         <article className="resume-document">
           <header className="resume-header">
             <div>
               <p className="resume-label">Professional Resume</p>
 
-              <h1>Kabir Bisanal</h1>
+              <h1>{profile.name}</h1>
 
-              <h2>Computer Science Student and Software Developer</h2>
+              <h2>{profile.professionalTitle}</h2>
             </div>
 
             <div className="resume-initials" aria-hidden="true">
-              KB
+              {profile.initials}
             </div>
           </header>
 
+          {/* Contact information row */}
+          <div className="resume-contact-row">
+            <span>📍 {profile.location}</span>
+
+            {profile.email ? (
+              <a href={`mailto:${profile.email}`}>
+                ✉️ {profile.email}
+              </a>
+            ) : (
+              <span>✉️ Email will be added</span>
+            )}
+
+            {profile.linkedInUrl ? (
+              <a
+                href={profile.linkedInUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                🔗 LinkedIn
+              </a>
+            ) : (
+              <span>🔗 LinkedIn will be added</span>
+            )}
+
+            {profile.githubUrl ? (
+              <a
+                href={profile.githubUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                💻 github.com/{profile.githubUsername}
+              </a>
+            ) : (
+              <span>💻 GitHub will be added</span>
+            )}
+          </div>
+
+          {/* PDF buttons */}
           <div className="resume-document-actions">
-  <a
-    href={resumeFilePath}
-    target="_blank"
-    rel="noreferrer"
-    className="xp-button resume-action-link"
-  >
-    Open PDF Resume
-  </a>
+            <a
+              href={resumeFilePath}
+              target="_blank"
+              rel="noreferrer"
+              className="xp-button resume-action-link"
+            >
+              Open PDF Resume
+            </a>
 
-  <a
-    href={resumeFilePath}
-    download="Kabir_Bisanal_Resume.pdf"
-    className="xp-button resume-action-link"
-  >
-    Download Resume
-  </a>
-</div>
+            <a
+              href={resumeFilePath}
+              download="Kabir_Bisanal_Resume.pdf"
+              className="xp-button resume-action-link"
+            >
+              Download Resume
+            </a>
+          </div>
 
+          {/* Professional summary */}
           <section className="resume-section">
             <h2>Professional Summary</h2>
 
-            <p>
-              Computer Science and Engineering student interested in software
-              development, web applications, database systems and automation. I
-              enjoy building practical projects and continuously improving my
-              programming and problem-solving skills.
-            </p>
+            <p>{profile.shortIntroduction}</p>
           </section>
 
+          {/* Education */}
           <section className="resume-section">
             <h2>Education</h2>
 
             <div className="resume-entry">
               <div className="resume-entry-heading">
                 <div>
-                  <h3>Bachelor of Engineering</h3>
+                  <h3>{profile.degree}</h3>
 
-                  <h4>Computer Science and Engineering</h4>
+                  <h4>{profile.branch}</h4>
                 </div>
 
                 <span>Currently pursuing</span>
               </div>
 
               <p>
-                SEA College of Engineering and Technology
+                {profile.college}
                 <br />
-                Visvesvaraya Technological University
+                {profile.university}
               </p>
             </div>
           </section>
 
+          {/* Professional experience */}
           <section className="resume-section">
             <h2>Professional Experience</h2>
 
@@ -299,23 +343,24 @@ export default function ResumeWindow({
 
               <ul>
                 <li>
-                  Learning how software-development tools and databases are used
-                  in real projects.
+                  Learning how software-development tools and databases
+                  are used in real projects.
                 </li>
 
                 <li>
-                  Developing practical knowledge of programming, version control
-                  and team-based development.
+                  Developing practical knowledge of programming, version
+                  control and team-based development.
                 </li>
 
                 <li>
-                  Exploring database technologies and application-development
-                  workflows.
+                  Exploring database technologies and
+                  application-development workflows.
                 </li>
               </ul>
             </div>
           </section>
 
+          {/* Technical skills */}
           <section className="resume-section">
             <h2>Technical Skills</h2>
 
@@ -326,56 +371,37 @@ export default function ResumeWindow({
             </div>
           </section>
 
+          {/* Featured projects */}
           <section className="resume-section">
-            <h2>Featured Projects</h2>
+  <h2>Featured Projects</h2>
 
-            <div className="resume-project">
-              <div className="resume-project-icon">📁</div>
+  {projects.slice(0, 3).map((project) => (
+    <div className="resume-project" key={project.id}>
+      <div
+        className="resume-project-icon"
+        aria-hidden="true"
+      >
+        📁
+      </div>
 
-              <div>
-                <h3>VTU Result Collector</h3>
+      <div>
+        <h3>{project.title}</h3>
 
-                <p>
-                  Browser-automation project using C# and Playwright to collect
-                  and organise student result information.
-                </p>
-              </div>
-            </div>
+        <p>{project.description}</p>
+      </div>
+    </div>
+  ))}
+</section>
 
-            <div className="resume-project">
-              <div className="resume-project-icon">📁</div>
-
-              <div>
-                <h3>Windows XP Portfolio</h3>
-
-                <p>
-                  Interactive portfolio website developed with Next.js, React,
-                  TypeScript and custom Windows XP-inspired CSS.
-                </p>
-              </div>
-            </div>
-
-            <div className="resume-project">
-              <div className="resume-project-icon">📁</div>
-
-              <div>
-                <h3>Student Result Analytics</h3>
-
-                <p>
-                  Analytics-dashboard concept for comparing academic
-                  performance, subject results, GPA and backlogs.
-                </p>
-              </div>
-            </div>
-          </section>
-
+          {/* Career objective */}
           <section className="resume-section">
             <h2>Career Objective</h2>
 
             <p>
-              To gain practical software-development experience, contribute to
-              useful projects and grow into a skilled developer with strong
-              programming, database and problem-solving knowledge.
+              To gain practical software-development experience,
+              contribute to useful projects and grow into a skilled
+              developer with strong programming, database and
+              problem-solving knowledge.
             </p>
           </section>
         </article>

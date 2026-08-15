@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import type { FormEvent, PointerEvent as ReactPointerEvent } from "react";
-
+import type { ProfileData } from "@/data/profile";
 type WindowPosition = {
   x: number;
   y: number;
 };
 
 type ContactWindowProps = {
+  profile: ProfileData;
   isActive: boolean;
   isMaximized: boolean;
   onFocus: () => void;
@@ -34,6 +35,7 @@ const initialFormData: ContactFormData = {
 };
 
 export default function ContactWindow({
+  profile,
   isActive,
   isMaximized,
   onFocus,
@@ -53,7 +55,6 @@ export default function ContactWindow({
     Example:
     const portfolioEmail = "kabir@example.com";
   */
-  const portfolioEmail = "";
 
   function handleInputChange(field: keyof ContactFormData, value: string) {
     setFormData((currentData) => ({
@@ -67,7 +68,7 @@ export default function ContactWindow({
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!portfolioEmail) {
+    if (!profile) {
       setStatusMessage(
         "The form is working. Add your email address in ContactWindow.tsx to activate email sending.",
       );
@@ -90,7 +91,7 @@ ${formData.message}`,
     setStatusMessage("Opening your email application...");
 
     window.location.href =
-      `mailto:${portfolioEmail}` +
+      `mailto:${profile.email}` +
       `?subject=${emailSubject}` +
       `&body=${emailBody}`;
   }
@@ -188,15 +189,25 @@ ${formData.message}`,
             <h3>Contact Information</h3>
 
             <div className="contact-detail">
-              <span aria-hidden="true">✉️</span>
+  <span aria-hidden="true">✉️</span>
 
-              <div>
-                <strong>Email</strong>
-                <p>Add your email later</p>
-              </div>
-            </div>
+  <div>
+    <strong>Email</strong>
 
-            <div className="contact-detail">
+    {profile.email ? (
+      <a
+        className="contact-profile-link"
+        href={`mailto:${profile.email}`}
+      >
+        {profile.email}
+      </a>
+    ) : (
+      <p>Add your email later</p>
+    )}
+  </div>
+</div>
+
+           <div className="contact-detail">
   <span aria-hidden="true">💻</span>
 
   <div>
@@ -204,30 +215,42 @@ ${formData.message}`,
 
     <a
       className="contact-profile-link"
-      href="https://github.com/Kabir-Bisanal"
+      href={profile.githubUrl}
       target="_blank"
       rel="noreferrer"
     >
-      github.com/Kabir-Bisanal
+      github.com/{profile.githubUsername}
     </a>
   </div>
 </div>
 
             <div className="contact-detail">
-              <span aria-hidden="true">🔗</span>
+  <span aria-hidden="true">🔗</span>
 
-              <div>
-                <strong>LinkedIn</strong>
-                <p>Add your LinkedIn link later</p>
-              </div>
-            </div>
+  <div>
+    <strong>LinkedIn</strong>
+
+    {profile.linkedInUrl ? (
+      <a
+        className="contact-profile-link"
+        href={profile.linkedInUrl}
+        target="_blank"
+        rel="noreferrer"
+      >
+        View LinkedIn profile
+      </a>
+    ) : (
+      <p>Add your LinkedIn link later</p>
+    )}
+  </div>
+</div>
 
             <div className="contact-detail">
               <span aria-hidden="true">📍</span>
 
               <div>
                 <strong>Location</strong>
-                <p>Karnataka, India</p>
+                <p>{profile.location}</p>
               </div>
             </div>
           </div>
@@ -241,8 +264,7 @@ ${formData.message}`,
             </div>
 
             <p className="availability-description">
-              Open to internships, entry-level software-development
-              opportunities and project collaborations.
+              {profile.availability}
             </p>
           </div>
 
