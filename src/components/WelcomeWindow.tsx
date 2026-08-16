@@ -109,7 +109,7 @@ export default function WelcomeWindow({
 </div>
 
         <div className="welcome-information">
-          <p className="welcome-label">Welcome!</p>
+          <p className="welcome-label">Welcome To My Portfolio!</p>
 
           <h1>{profile.name}</h1>
 
