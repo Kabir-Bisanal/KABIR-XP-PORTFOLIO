@@ -1,5 +1,5 @@
 "use client";
-
+import Image from "next/image";
 import type { PointerEvent as ReactPointerEvent } from "react";
 import type { ProfileData } from "@/data/profile";
 import type { WindowPosition } from "@/types/window";
@@ -101,11 +101,15 @@ export default function WelcomeWindow({
       </div>
 
       <div className="window-content">
-        <div
-  className="profile-placeholder"
-  aria-hidden="true"
->
-  {profile.initials}
+        <div className="profile-picture-frame">
+  <Image
+    src="/images/profile.jpeg"
+    alt={`${profile.name} profile picture`}
+    width={145}
+    height={170}
+    className="profile-picture"
+    priority
+  />
 </div>
 
         <div className="welcome-information">
