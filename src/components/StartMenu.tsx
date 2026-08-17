@@ -38,7 +38,7 @@ export default function StartMenu({
       <header className="start-menu-header">
 <div className="start-menu-avatar">
   <Image
-    src="/images/profile-kabir.jpg"
+    src="/images/profile-kabir.jpeg"
     alt={`${profile.name} profile picture`}
     width={49}
     height={49}

@@ -121,7 +121,7 @@ export default function AboutWindow({
         <aside className="about-sidebar">
 <div className="about-profile-picture">
   <Image
-    src="/images/profile-kabir.jpg"
+    src="/images/profile-kabir.jpeg"
     alt={`${profile.name} profile picture`}
     width={125}
     height={140}
