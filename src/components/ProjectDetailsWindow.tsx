@@ -13,7 +13,9 @@ type ProjectDetailsWindowProps = {
   onMinimize: () => void;
   onMaximize: () => void;
   position: WindowPosition | null;
-  onTitleBarPointerDown: (event: ReactPointerEvent<HTMLElement>) => void;
+  onTitleBarPointerDown: (
+    event: ReactPointerEvent<HTMLElement>,
+  ) => void;
 };
 
 export default function ProjectDetailsWindow({
@@ -43,7 +45,14 @@ export default function ProjectDetailsWindow({
       }
       onMouseDown={onFocus}
     >
-      <header className="xp-title-bar" onPointerDown={onTitleBarPointerDown}>
+      {/* =====================================
+          TITLE BAR
+      ====================================== */}
+
+      <header
+        className="xp-title-bar"
+        onPointerDown={onTitleBarPointerDown}
+      >
         <div className="xp-title">
           <span className="title-icon" aria-hidden="true">
             📁
@@ -64,7 +73,9 @@ export default function ProjectDetailsWindow({
           <button
             type="button"
             aria-label={
-              isMaximized ? "Restore project window" : "Maximize project window"
+              isMaximized
+                ? "Restore project window"
+                : "Maximize project window"
             }
             onClick={onMaximize}
           >
@@ -82,6 +93,10 @@ export default function ProjectDetailsWindow({
         </div>
       </header>
 
+      {/* =====================================
+          MENU
+      ====================================== */}
+
       <div className="window-menu">
         <span>File</span>
         <span>Edit</span>
@@ -90,14 +105,23 @@ export default function ProjectDetailsWindow({
         <span>Help</span>
       </div>
 
+      {/* =====================================
+          TOOLBAR
+      ====================================== */}
+
       <div className="project-details-toolbar">
         <button type="button" onClick={onClose}>
           ← Back to Projects
         </button>
 
         <button type="button">🔍 Search</button>
+
         <button type="button">📁 Folders</button>
       </div>
+
+      {/* =====================================
+          ADDRESS BAR
+      ====================================== */}
 
       <div className="address-bar">
         <span>Address</span>
@@ -111,8 +135,15 @@ export default function ProjectDetailsWindow({
       </div>
 
       <div className="project-details-content">
+        {/* =====================================
+            SIDEBAR
+        ====================================== */}
+
         <aside className="project-details-sidebar">
-          <div className="project-details-folder" aria-hidden="true">
+          <div
+            className="project-details-folder"
+            aria-hidden="true"
+          >
             📁
           </div>
 
@@ -120,6 +151,7 @@ export default function ProjectDetailsWindow({
 
           <div className="project-status-box">
             <h3>Project Status</h3>
+
             <p>{project.status}</p>
           </div>
 
@@ -128,7 +160,9 @@ export default function ProjectDetailsWindow({
 
             <div className="project-sidebar-technologies">
               {project.technologies.map((technology) => (
-                <span key={technology}>{technology}</span>
+                <span key={technology}>
+                  {technology}
+                </span>
               ))}
             </div>
           </div>
@@ -137,69 +171,172 @@ export default function ProjectDetailsWindow({
             <h3>Project Links</h3>
 
             {project.githubUrl ? (
-              <a href={project.githubUrl} target="_blank" rel="noreferrer">
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
                 View GitHub Repository
               </a>
             ) : (
-              <p>GitHub link will be added later.</p>
+              <p>Repository not publicly available yet.</p>
             )}
 
             {project.demoUrl ? (
-              <a href={project.demoUrl} target="_blank" rel="noreferrer">
+              <a
+                href={project.demoUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
                 Open Live Demo
               </a>
             ) : (
-              <p>Live demo will be added later.</p>
+              <p>Public demo not available yet.</p>
             )}
           </div>
         </aside>
 
+        {/* =====================================
+            MAIN PROJECT INFORMATION
+        ====================================== */}
+
         <article className="project-details-main">
           <header className="project-details-heading">
-            <p>Project information</p>
+            <p>Project Case Study</p>
+
             <h1>{project.title}</h1>
+
             <p>{project.description}</p>
           </header>
 
+          {/* =====================================
+              PROBLEM / GOAL
+          ====================================== */}
+
+          {project.problem && (
+            <section className="project-details-section">
+              <h2>Problem / Goal</h2>
+
+              <p>{project.problem}</p>
+            </section>
+          )}
+
+          {/* =====================================
+              PROJECT OVERVIEW
+          ====================================== */}
+
           <section className="project-details-section">
-            <h2>Project Overview</h2>
+            <h2>What I Built</h2>
+
             <p>{project.overview}</p>
           </section>
 
+          {/* =====================================
+              TECHNICAL DECISIONS
+          ====================================== */}
+
+          {project.technicalDecisions &&
+            project.technicalDecisions.length > 0 && (
+              <section className="project-details-section">
+                <h2>Technical Decisions</h2>
+
+                <ul>
+                  {project.technicalDecisions.map(
+                    (decision) => (
+                      <li key={decision}>
+                        {decision}
+                      </li>
+                    ),
+                  )}
+                </ul>
+              </section>
+            )}
+
+          {/* =====================================
+              MAIN FEATURES
+          ====================================== */}
+
           <section className="project-details-section">
-            <h2>Main Features</h2>
+            <h2>Key Features</h2>
 
             <ul>
               {project.features.map((feature) => (
-                <li key={feature}>{feature}</li>
+                <li key={feature}>
+                  {feature}
+                </li>
               ))}
             </ul>
           </section>
+
+          {/* =====================================
+              RESULTS
+          ====================================== */}
+
+          {project.results &&
+            project.results.length > 0 && (
+              <section className="project-details-section project-results-section">
+                <h2>Results & Proof</h2>
+
+                <div className="project-results-grid">
+                  {project.results.map((result) => (
+                    <div
+                      className="project-result-card"
+                      key={result}
+                    >
+                      <span aria-hidden="true">✓</span>
+
+                      <p>{result}</p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+          {/* =====================================
+              MY CONTRIBUTION
+          ====================================== */}
 
           <section className="project-details-section">
             <h2>My Contribution</h2>
+
             <p>{project.contribution}</p>
           </section>
 
+          {/* =====================================
+              CHALLENGES
+          ====================================== */}
+
           <section className="project-details-section">
-            <h2>Challenges</h2>
+            <h2>Engineering Challenges</h2>
 
             <ul>
               {project.challenges.map((challenge) => (
-                <li key={challenge}>{challenge}</li>
+                <li key={challenge}>
+                  {challenge}
+                </li>
               ))}
             </ul>
           </section>
+
+          {/* =====================================
+              LESSONS
+          ====================================== */}
 
           <section className="project-details-section">
             <h2>What I Learned</h2>
 
             <ul>
               {project.lessons.map((lesson) => (
-                <li key={lesson}>{lesson}</li>
+                <li key={lesson}>
+                  {lesson}
+                </li>
               ))}
             </ul>
           </section>
+
+          {/* =====================================
+              PROJECT LINKS
+          ====================================== */}
 
           <div className="project-details-actions">
             {project.githubUrl ? (
@@ -212,8 +349,12 @@ export default function ProjectDetailsWindow({
                 View on GitHub
               </a>
             ) : (
-              <button type="button" className="xp-button" disabled>
-                GitHub Link Coming Soon
+              <button
+                type="button"
+                className="xp-button"
+                disabled
+              >
+                Repository Not Public Yet
               </button>
             )}
 
@@ -227,16 +368,25 @@ export default function ProjectDetailsWindow({
                 Open Live Demo
               </a>
             ) : (
-              <button type="button" className="xp-button" disabled>
-                Live Demo Coming Soon
+              <button
+                type="button"
+                className="xp-button"
+                disabled
+              >
+                Public Demo Not Available
               </button>
             )}
           </div>
         </article>
       </div>
 
+      {/* =====================================
+          STATUS BAR
+      ====================================== */}
+
       <footer className="window-status-bar">
         <span>{project.title}</span>
+
         <span>{project.status}</span>
       </footer>
     </section>

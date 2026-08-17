@@ -1,4 +1,8 @@
 export type ProfileData = {
+  highlights: {
+  title: string;
+  detail: string;
+}[];
   name: string;
   initials: string;
   professionalTitle: string;
@@ -21,11 +25,25 @@ export const profile: ProfileData = {
   initials: "KB",
 
   professionalTitle:
-    "Software Developer and Computer Science Student",
+  "Software Developer | Full-Stack & Data Science Projects",
 
-  shortIntroduction:
-    "I build web applications, automation tools and software projects using technologies such as C#, Python, SQL and modern web-development tools.",
+ shortIntroduction:
+  "Computer Science student building end-to-end software projects across full-stack web development, data science, automation and databases. My recent work includes SmartStock, Topicora and this Windows XP portfolio.",
 
+  highlights: [
+  {
+    title: "SmartStock",
+    detail: "582K+ retail observations",
+  },
+  {
+    title: "Topicora",
+    detail: "Full-stack publishing platform",
+  },
+  {
+    title: "XP Portfolio",
+    detail: "Live at kabirbisanal.com",
+  },
+],
   location: "Karnataka, India",
 
   degree: "Bachelor of Engineering",

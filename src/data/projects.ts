@@ -4,11 +4,21 @@ export type PortfolioProject = {
   description: string;
   technologies: string[];
   status: string;
+
+  problem?: string;
+
   overview: string;
+
+  technicalDecisions?: string[];
+
   features: string[];
+
+  results?: string[];
+
   contribution: string;
   challenges: string[];
   lessons: string[];
+
   githubUrl: string;
   demoUrl: string;
 };

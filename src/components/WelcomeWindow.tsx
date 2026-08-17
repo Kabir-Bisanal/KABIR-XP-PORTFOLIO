@@ -125,6 +125,19 @@ export default function WelcomeWindow({
             {profile.shortIntroduction}
           </p>
 
+          <div className="welcome-highlights">
+  {profile.highlights.map((highlight) => (
+    <div
+      className="welcome-highlight"
+      key={highlight.title}
+    >
+      <strong>{highlight.title}</strong>
+
+      <span>{highlight.detail}</span>
+    </div>
+  ))}
+</div>
+
           <div className="welcome-actions">
             <button
               type="button"
