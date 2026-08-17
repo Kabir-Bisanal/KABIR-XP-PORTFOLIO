@@ -1,4 +1,6 @@
 "use client";
+
+import Image from "next/image";
 import type { ProfileData } from "@/data/profile";
 
 type StartMenuProps = {
@@ -35,7 +37,13 @@ export default function StartMenu({
     <section className="start-menu" aria-label="Portfolio Start menu">
       <header className="start-menu-header">
 <div className="start-menu-avatar">
-  {profile.initials}
+  <Image
+    src="/images/profile-kabir.jpg"
+    alt={`${profile.name} profile picture`}
+    width={49}
+    height={49}
+    className="start-menu-avatar-image"
+  />
 </div>
         <div>
           <h2>{profile.name}</h2>

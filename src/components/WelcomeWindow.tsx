@@ -103,7 +103,7 @@ export default function WelcomeWindow({
       <div className="window-content">
         <div className="profile-picture-frame">
   <Image
-    src="/images/profile.jpeg"
+    src="/images/profile-kabir.jpeg"
     alt={`${profile.name} profile picture`}
     width={145}
     height={170}

@@ -1,5 +1,5 @@
 "use client";
-
+import Image from "next/image";
 import type { PointerEvent as ReactPointerEvent } from "react";
 import type { ProfileData } from "@/data/profile";
 import { technicalSkills } from "@/data/skills";
@@ -120,7 +120,13 @@ export default function AboutWindow({
       <div className="about-content">
         <aside className="about-sidebar">
 <div className="about-profile-picture">
-  {profile.initials}
+  <Image
+    src="/images/profile-kabir.jpg"
+    alt={`${profile.name} profile picture`}
+    width={125}
+    height={140}
+    className="about-profile-image"
+  />
 </div>
           <h2>{profile.name}</h2>
 
