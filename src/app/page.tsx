@@ -21,6 +21,10 @@ import { profile } from "@/data/profile";
 import type { WindowPosition } from "@/types/window";type WindowName =
   "welcome" | "about" | "projects" | "resume" | "contact" | "projectDetails";
 
+  const MIN_VISIBLE_WINDOW_WIDTH = 120;
+const TASKBAR_HEIGHT = 42;
+const TITLE_BAR_HEIGHT = 34;
+
 export default function Home() {
   const [welcomeOpen, setWelcomeOpen] = useState(true);
   const [welcomeMinimized, setWelcomeMinimized] = useState(false);
@@ -233,15 +237,35 @@ function toggleStartMenu() {
     const pointerOffsetY = event.clientY - windowRectangle.top;
 
     function handlePointerMove(moveEvent: PointerEvent) {
-      const maximumX = Math.max(0, window.innerWidth - windowRectangle.width);
+  const minimumX =
+    -(windowRectangle.width - MIN_VISIBLE_WINDOW_WIDTH);
 
-      const maximumY = Math.max(0, window.innerHeight - 42 - 34);
+  const maximumX =
+    window.innerWidth - MIN_VISIBLE_WINDOW_WIDTH;
 
-      setWelcomePosition({
-        x: Math.min(Math.max(0, moveEvent.clientX - pointerOffsetX), maximumX),
-        y: Math.min(Math.max(0, moveEvent.clientY - pointerOffsetY), maximumY),
-      });
-    }
+  const maximumY = Math.max(
+    0,
+    window.innerHeight - TASKBAR_HEIGHT - TITLE_BAR_HEIGHT,
+  );
+
+  const newX =
+    moveEvent.clientX - pointerOffsetX;
+
+  const newY =
+    moveEvent.clientY - pointerOffsetY;
+
+  setWelcomePosition({
+    x: Math.min(
+      Math.max(minimumX, newX),
+      maximumX,
+    ),
+
+    y: Math.min(
+      Math.max(0, newY),
+      maximumY,
+    ),
+  });
+}
 
     function stopDragging() {
       window.removeEventListener("pointermove", handlePointerMove);
@@ -315,15 +339,35 @@ function toggleStartMenu() {
     const pointerOffsetY = event.clientY - windowRectangle.top;
 
     function handlePointerMove(moveEvent: PointerEvent) {
-      const maximumX = Math.max(0, window.innerWidth - windowRectangle.width);
+  const minimumX =
+    -(windowRectangle.width - MIN_VISIBLE_WINDOW_WIDTH);
 
-      const maximumY = Math.max(0, window.innerHeight - 42 - 34);
+  const maximumX =
+    window.innerWidth - MIN_VISIBLE_WINDOW_WIDTH;
 
-      setAboutPosition({
-        x: Math.min(Math.max(0, moveEvent.clientX - pointerOffsetX), maximumX),
-        y: Math.min(Math.max(0, moveEvent.clientY - pointerOffsetY), maximumY),
-      });
-    }
+  const maximumY = Math.max(
+    0,
+    window.innerHeight - TASKBAR_HEIGHT - TITLE_BAR_HEIGHT,
+  );
+
+  const newX =
+    moveEvent.clientX - pointerOffsetX;
+
+  const newY =
+    moveEvent.clientY - pointerOffsetY;
+
+  setAboutPosition({
+    x: Math.min(
+      Math.max(minimumX, newX),
+      maximumX,
+    ),
+
+    y: Math.min(
+      Math.max(0, newY),
+      maximumY,
+    ),
+  });
+}
 
     function stopDragging() {
       window.removeEventListener("pointermove", handlePointerMove);
@@ -396,15 +440,35 @@ function toggleStartMenu() {
     const pointerOffsetY = event.clientY - windowRectangle.top;
 
     function handlePointerMove(moveEvent: PointerEvent) {
-      const maximumX = Math.max(0, window.innerWidth - windowRectangle.width);
+  const minimumX =
+    -(windowRectangle.width - MIN_VISIBLE_WINDOW_WIDTH);
 
-      const maximumY = Math.max(0, window.innerHeight - 42 - 34);
+  const maximumX =
+    window.innerWidth - MIN_VISIBLE_WINDOW_WIDTH;
 
-      setProjectsPosition({
-        x: Math.min(Math.max(0, moveEvent.clientX - pointerOffsetX), maximumX),
-        y: Math.min(Math.max(0, moveEvent.clientY - pointerOffsetY), maximumY),
-      });
-    }
+  const maximumY = Math.max(
+    0,
+    window.innerHeight - TASKBAR_HEIGHT - TITLE_BAR_HEIGHT,
+  );
+
+  const newX =
+    moveEvent.clientX - pointerOffsetX;
+
+  const newY =
+    moveEvent.clientY - pointerOffsetY;
+
+  setProjectsPosition({
+    x: Math.min(
+      Math.max(minimumX, newX),
+      maximumX,
+    ),
+
+    y: Math.min(
+      Math.max(0, newY),
+      maximumY,
+    ),
+  });
+}
 
     function stopDragging() {
       window.removeEventListener("pointermove", handlePointerMove);
@@ -477,15 +541,35 @@ function toggleStartMenu() {
     const pointerOffsetY = event.clientY - windowRectangle.top;
 
     function handlePointerMove(moveEvent: PointerEvent) {
-      const maximumX = Math.max(0, window.innerWidth - windowRectangle.width);
+  const minimumX =
+    -(windowRectangle.width - MIN_VISIBLE_WINDOW_WIDTH);
 
-      const maximumY = Math.max(0, window.innerHeight - 42 - 34);
+  const maximumX =
+    window.innerWidth - MIN_VISIBLE_WINDOW_WIDTH;
 
-      setResumePosition({
-        x: Math.min(Math.max(0, moveEvent.clientX - pointerOffsetX), maximumX),
-        y: Math.min(Math.max(0, moveEvent.clientY - pointerOffsetY), maximumY),
-      });
-    }
+  const maximumY = Math.max(
+    0,
+    window.innerHeight - TASKBAR_HEIGHT - TITLE_BAR_HEIGHT,
+  );
+
+  const newX =
+    moveEvent.clientX - pointerOffsetX;
+
+  const newY =
+    moveEvent.clientY - pointerOffsetY;
+
+  setResumePosition({
+    x: Math.min(
+      Math.max(minimumX, newX),
+      maximumX,
+    ),
+
+    y: Math.min(
+      Math.max(0, newY),
+      maximumY,
+    ),
+  });
+}
 
     function stopDragging() {
       window.removeEventListener("pointermove", handlePointerMove);
@@ -557,15 +641,35 @@ function toggleStartMenu() {
     const pointerOffsetY = event.clientY - windowRectangle.top;
 
     function handlePointerMove(moveEvent: PointerEvent) {
-      const maximumX = Math.max(0, window.innerWidth - windowRectangle.width);
+  const minimumX =
+    -(windowRectangle.width - MIN_VISIBLE_WINDOW_WIDTH);
 
-      const maximumY = Math.max(0, window.innerHeight - 42 - 34);
+  const maximumX =
+    window.innerWidth - MIN_VISIBLE_WINDOW_WIDTH;
 
-      setContactPosition({
-        x: Math.min(Math.max(0, moveEvent.clientX - pointerOffsetX), maximumX),
-        y: Math.min(Math.max(0, moveEvent.clientY - pointerOffsetY), maximumY),
-      });
-    }
+  const maximumY = Math.max(
+    0,
+    window.innerHeight - TASKBAR_HEIGHT - TITLE_BAR_HEIGHT,
+  );
+
+  const newX =
+    moveEvent.clientX - pointerOffsetX;
+
+  const newY =
+    moveEvent.clientY - pointerOffsetY;
+
+  setContactPosition({
+    x: Math.min(
+      Math.max(minimumX, newX),
+      maximumX,
+    ),
+
+    y: Math.min(
+      Math.max(0, newY),
+      maximumY,
+    ),
+  });
+}
 
     function stopDragging() {
       window.removeEventListener("pointermove", handlePointerMove);
@@ -656,15 +760,35 @@ function toggleStartMenu() {
     const pointerOffsetY = event.clientY - windowRectangle.top;
 
     function handlePointerMove(moveEvent: PointerEvent) {
-      const maximumX = Math.max(0, window.innerWidth - windowRectangle.width);
+  const minimumX =
+    -(windowRectangle.width - MIN_VISIBLE_WINDOW_WIDTH);
 
-      const maximumY = Math.max(0, window.innerHeight - 42 - 34);
+  const maximumX =
+    window.innerWidth - MIN_VISIBLE_WINDOW_WIDTH;
 
-      setProjectDetailsPosition({
-        x: Math.min(Math.max(0, moveEvent.clientX - pointerOffsetX), maximumX),
-        y: Math.min(Math.max(0, moveEvent.clientY - pointerOffsetY), maximumY),
-      });
-    }
+  const maximumY = Math.max(
+    0,
+    window.innerHeight - TASKBAR_HEIGHT - TITLE_BAR_HEIGHT,
+  );
+
+  const newX =
+    moveEvent.clientX - pointerOffsetX;
+
+  const newY =
+    moveEvent.clientY - pointerOffsetY;
+
+  setProjectDetailsPosition({
+    x: Math.min(
+      Math.max(minimumX, newX),
+      maximumX,
+    ),
+
+    y: Math.min(
+      Math.max(0, newY),
+      maximumY,
+    ),
+  });
+}
 
     function stopDragging() {
       window.removeEventListener("pointermove", handlePointerMove);
