@@ -3197,3 +3197,119 @@ button {
     width: 100%;
   }
 }
+/* =========================================
+   STEP 40B - RESIZABLE XP WINDOWS
+========================================= */
+
+/*
+  Resizing is desktop-only.
+
+  The resize system itself is handled from page.tsx.
+  This CSS provides the visual resize grip and makes
+  window content adapt to a manually selected height.
+*/
+
+@media (min-width: 901px) {
+  .xp-window:not(.maximized-window)::after {
+    content: "";
+    position: absolute;
+    right: 2px;
+    bottom: 2px;
+    z-index: 60;
+    width: 20px;
+    height: 20px;
+    cursor: nwse-resize;
+    background:
+      linear-gradient(
+        135deg,
+        transparent 0 45%,
+        #777 46% 51%,
+        transparent 52% 61%,
+        #777 62% 67%,
+        transparent 68% 77%,
+        #777 78% 83%,
+        transparent 84% 100%
+      );
+  }
+
+  /*
+    Once a user manually resizes a window,
+    that window becomes a vertical flex container.
+
+    This lets the internal content area shrink and
+    become scrollable instead of overflowing.
+  */
+
+  .xp-window.user-resized-window:not(
+      .maximized-window
+    ) {
+    display: flex;
+    flex-direction: column;
+    max-height: none !important;
+  }
+
+  /*
+    Fixed portions of the Windows XP interface
+    should not shrink during resizing.
+  */
+
+  .user-resized-window:not(.maximized-window)
+    > .xp-title-bar,
+  .user-resized-window:not(.maximized-window)
+    > .window-menu,
+  .user-resized-window:not(.maximized-window)
+    > .projects-toolbar,
+  .user-resized-window:not(.maximized-window)
+    > .about-toolbar,
+  .user-resized-window:not(.maximized-window)
+    > .resume-toolbar,
+  .user-resized-window:not(.maximized-window)
+    > .contact-toolbar,
+  .user-resized-window:not(.maximized-window)
+    > .project-details-toolbar,
+  .user-resized-window:not(.maximized-window)
+    > .address-bar,
+  .user-resized-window:not(.maximized-window)
+    > .window-status-bar {
+    flex-shrink: 0;
+  }
+
+  /*
+    The main content area receives whatever vertical
+    space remains after the title bar, toolbar,
+    address bar and status bar.
+
+    If the content does not fit, it scrolls.
+  */
+
+  .user-resized-window:not(.maximized-window)
+    .window-content,
+  .user-resized-window:not(.maximized-window)
+    .projects-content,
+  .user-resized-window:not(.maximized-window)
+    .about-content,
+  .user-resized-window:not(.maximized-window)
+    .resume-content,
+  .user-resized-window:not(.maximized-window)
+    .contact-content,
+  .user-resized-window:not(.maximized-window)
+    .project-details-content {
+    flex: 1;
+    min-height: 0;
+    max-height: none !important;
+    overflow-y: auto;
+  }
+}
+
+/*
+  Never expose manual resizing on tablet/mobile.
+
+  Your responsive rules already control the sizes
+  of windows on these screens.
+*/
+
+@media (max-width: 900px) {
+  .xp-window::after {
+    display: none !important;
+  }
+}

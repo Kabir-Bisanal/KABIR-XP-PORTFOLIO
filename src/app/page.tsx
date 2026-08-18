@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
 import type {
   MouseEvent as ReactMouseEvent,
   PointerEvent as ReactPointerEvent,
 } from "react";
+
 import WelcomeWindow from "@/components/WelcomeWindow";
 import ResumeWindow from "@/components/ResumeWindow";
 import ContactWindow from "@/components/ContactWindow";
@@ -13,174 +15,742 @@ import ProjectsWindow from "@/components/ProjectsWindow";
 import StartMenu from "@/components/StartMenu";
 import Taskbar from "@/components/Taskbar";
 import ProjectDetailsWindow from "@/components/ProjectDetailsWindow";
+
 import DesktopIcons, {
   type DesktopIconId,
 } from "@/components/DesktopIcons";
-import { projects, type PortfolioProject } from "@/data/projects";
-import { profile } from "@/data/profile";
-import type { WindowPosition } from "@/types/window";type WindowName =
-  "welcome" | "about" | "projects" | "resume" | "contact" | "projectDetails";
 
-  const MIN_VISIBLE_WINDOW_WIDTH = 120;
+import {
+  projects,
+  type PortfolioProject,
+} from "@/data/projects";
+
+import { profile } from "@/data/profile";
+
+import type {
+  WindowPosition,
+  WindowSize,
+} from "@/types/window";
+
+type WindowName =
+  | "welcome"
+  | "about"
+  | "projects"
+  | "resume"
+  | "contact"
+  | "projectDetails";
+
+const MIN_VISIBLE_WINDOW_WIDTH = 120;
+
 const TASKBAR_HEIGHT = 42;
+
 const TITLE_BAR_HEIGHT = 34;
 
+const RESIZE_BREAKPOINT = 900;
+
+const RESIZE_HANDLE_SIZE = 22;
+
+const minimumWindowSizes: Record<
+  WindowName,
+  WindowSize
+> = {
+  welcome: {
+    width: 440,
+    height: 320,
+  },
+
+  about: {
+    width: 560,
+    height: 400,
+  },
+
+  projects: {
+    width: 560,
+    height: 400,
+  },
+
+  resume: {
+    width: 600,
+    height: 420,
+  },
+
+  contact: {
+    width: 560,
+    height: 420,
+  },
+
+  projectDetails: {
+    width: 600,
+    height: 420,
+  },
+};
+
+/*
+  Reapplies a manually resized size whenever React renders
+  the window again.
+
+  This is especially important after minimizing/restoring
+  a window because minimized windows are temporarily removed
+  from the DOM.
+*/
+function useApplyWindowSize(
+  selector: string,
+  size: WindowSize | null,
+  isVisible: boolean,
+) {
+  useEffect(() => {
+    if (!isVisible) {
+      return;
+    }
+
+    const windowElement =
+      document.querySelector<HTMLElement>(selector);
+
+    if (!windowElement) {
+      return;
+    }
+
+    if (!size) {
+      windowElement.classList.remove(
+        "user-resized-window",
+      );
+
+      windowElement.style.removeProperty("width");
+      windowElement.style.removeProperty("height");
+      windowElement.style.removeProperty("max-height");
+
+      return;
+    }
+
+    windowElement.classList.add(
+      "user-resized-window",
+    );
+
+    windowElement.style.width = `${size.width}px`;
+    windowElement.style.height = `${size.height}px`;
+    windowElement.style.maxHeight = "none";
+  });
+}
+
 export default function Home() {
-  const [welcomeOpen, setWelcomeOpen] = useState(true);
-  const [welcomeMinimized, setWelcomeMinimized] = useState(false);
-  const [welcomeMaximized, setWelcomeMaximized] = useState(false);
-  const [welcomePosition, setWelcomePosition] = useState<WindowPosition | null>(
-    null,
-  );
+  /* =========================================
+     WELCOME WINDOW STATE
+  ========================================= */
 
-  const [aboutOpen, setAboutOpen] = useState(false);
-  const [aboutMinimized, setAboutMinimized] = useState(false);
-  const [aboutMaximized, setAboutMaximized] = useState(false);
-  const [aboutPosition, setAboutPosition] = useState<WindowPosition | null>(
-    null,
-  );
+  const [welcomeOpen, setWelcomeOpen] =
+    useState(true);
 
-  const [projectsOpen, setProjectsOpen] = useState(false);
-  const [projectsMinimized, setProjectsMinimized] = useState(false);
-  const [projectsMaximized, setProjectsMaximized] = useState(false);
+  const [welcomeMinimized, setWelcomeMinimized] =
+    useState(false);
+
+  const [welcomeMaximized, setWelcomeMaximized] =
+    useState(false);
+
+  const [welcomePosition, setWelcomePosition] =
+    useState<WindowPosition | null>(null);
+
+  const [welcomeSize, setWelcomeSize] =
+    useState<WindowSize | null>(null);
+
+  /* =========================================
+     ABOUT WINDOW STATE
+  ========================================= */
+
+  const [aboutOpen, setAboutOpen] =
+    useState(false);
+
+  const [aboutMinimized, setAboutMinimized] =
+    useState(false);
+
+  const [aboutMaximized, setAboutMaximized] =
+    useState(false);
+
+  const [aboutPosition, setAboutPosition] =
+    useState<WindowPosition | null>(null);
+
+  const [aboutSize, setAboutSize] =
+    useState<WindowSize | null>(null);
+
+  /* =========================================
+     PROJECTS WINDOW STATE
+  ========================================= */
+
+  const [projectsOpen, setProjectsOpen] =
+    useState(false);
+
+  const [projectsMinimized, setProjectsMinimized] =
+    useState(false);
+
+  const [projectsMaximized, setProjectsMaximized] =
+    useState(false);
+
   const [projectsPosition, setProjectsPosition] =
     useState<WindowPosition | null>(null);
 
-  const [resumeOpen, setResumeOpen] = useState(false);
-  const [resumeMinimized, setResumeMinimized] = useState(false);
-  const [resumeMaximized, setResumeMaximized] = useState(false);
-  const [resumePosition, setResumePosition] = useState<WindowPosition | null>(
-    null,
-  );
+  const [projectsSize, setProjectsSize] =
+    useState<WindowSize | null>(null);
 
-  const [contactOpen, setContactOpen] = useState(false);
-  const [contactMinimized, setContactMinimized] = useState(false);
-  const [contactMaximized, setContactMaximized] = useState(false);
-  const [contactPosition, setContactPosition] = useState<WindowPosition | null>(
-    null,
-  );
+  /* =========================================
+     RESUME WINDOW STATE
+  ========================================= */
 
-  const [startMenuOpen, setStartMenuOpen] = useState(false);
+  const [resumeOpen, setResumeOpen] =
+    useState(false);
+
+  const [resumeMinimized, setResumeMinimized] =
+    useState(false);
+
+  const [resumeMaximized, setResumeMaximized] =
+    useState(false);
+
+  const [resumePosition, setResumePosition] =
+    useState<WindowPosition | null>(null);
+
+  const [resumeSize, setResumeSize] =
+    useState<WindowSize | null>(null);
+
+  /* =========================================
+     CONTACT WINDOW STATE
+  ========================================= */
+
+  const [contactOpen, setContactOpen] =
+    useState(false);
+
+  const [contactMinimized, setContactMinimized] =
+    useState(false);
+
+  const [contactMaximized, setContactMaximized] =
+    useState(false);
+
+  const [contactPosition, setContactPosition] =
+    useState<WindowPosition | null>(null);
+
+  const [contactSize, setContactSize] =
+    useState<WindowSize | null>(null);
+
+  /* =========================================
+     PROJECT DETAILS STATE
+  ========================================= */
+
   const [selectedProject, setSelectedProject] =
     useState<PortfolioProject | null>(null);
 
-  const [selectedDesktopIcon, setSelectedDesktopIcon] =
-  useState<DesktopIconId | null>(null);
+  const [
+    projectDetailsMinimized,
+    setProjectDetailsMinimized,
+  ] = useState(false);
 
-  const [projectDetailsMinimized, setProjectDetailsMinimized] = useState(false);
-  const [projectDetailsMaximized, setProjectDetailsMaximized] = useState(false);
-  const [activeWindow, setActiveWindow] = useState<WindowName>("welcome");
-  const [projectDetailsPosition, setProjectDetailsPosition] =
-    useState<WindowPosition | null>(null);
+  const [
+    projectDetailsMaximized,
+    setProjectDetailsMaximized,
+  ] = useState(false);
 
-function handleWelcomeTaskbarClick() {
-  if (
-    activeWindow === "welcome" &&
-    !welcomeMinimized
-  ) {
-    minimizeWelcomeWindow();
-  } else {
-    openWelcomeWindow();
-  }
-}
+  const [
+    projectDetailsPosition,
+    setProjectDetailsPosition,
+  ] = useState<WindowPosition | null>(null);
 
-function handleAboutTaskbarClick() {
-  if (
-    activeWindow === "about" &&
-    !aboutMinimized
-  ) {
-    minimizeAboutWindow();
-  } else {
-    openAboutWindow();
-  }
-}
+  const [
+    projectDetailsSize,
+    setProjectDetailsSize,
+  ] = useState<WindowSize | null>(null);
 
-function handleProjectsTaskbarClick() {
-  if (
-    activeWindow === "projects" &&
-    !projectsMinimized
-  ) {
-    minimizeProjectsWindow();
-  } else {
-    openProjectsWindow();
-  }
-}
+  /* =========================================
+     DESKTOP / START MENU STATE
+  ========================================= */
 
-function handleResumeTaskbarClick() {
-  if (
-    activeWindow === "resume" &&
-    !resumeMinimized
-  ) {
-    minimizeResumeWindow();
-  } else {
-    openResumeWindow();
-  }
-}
+  const [startMenuOpen, setStartMenuOpen] =
+    useState(false);
 
-function handleContactTaskbarClick() {
-  if (
-    activeWindow === "contact" &&
-    !contactMinimized
-  ) {
-    minimizeContactWindow();
-  } else {
-    openContactWindow();
-  }
-}
+  const [
+    selectedDesktopIcon,
+    setSelectedDesktopIcon,
+  ] = useState<DesktopIconId | null>(null);
 
-function handleProjectDetailsTaskbarClick() {
-  if (
-    activeWindow === "projectDetails" &&
-    !projectDetailsMinimized
-  ) {
-    minimizeProjectDetails();
-  } else {
-    restoreProjectDetails();
-  }
-}
+  const [activeWindow, setActiveWindow] =
+    useState<WindowName>("welcome");
 
-function toggleStartMenu() {
-  setStartMenuOpen(
-    (currentValue) => !currentValue,
+  /* =========================================
+     REAPPLY CUSTOM WINDOW SIZES
+  ========================================= */
+
+  useApplyWindowSize(
+    ".welcome-window",
+    welcomeSize,
+    welcomeOpen && !welcomeMinimized,
   );
+
+  useApplyWindowSize(
+    ".about-window",
+    aboutSize,
+    aboutOpen && !aboutMinimized,
+  );
+
+  useApplyWindowSize(
+    ".projects-window",
+    projectsSize,
+    projectsOpen && !projectsMinimized,
+  );
+
+  useApplyWindowSize(
+    ".resume-window",
+    resumeSize,
+    resumeOpen && !resumeMinimized,
+  );
+
+  useApplyWindowSize(
+    ".contact-window",
+    contactSize,
+    contactOpen && !contactMinimized,
+  );
+
+  useApplyWindowSize(
+    ".project-details-window",
+    projectDetailsSize,
+    selectedProject !== null &&
+      !projectDetailsMinimized,
+  );
+
+  /* =========================================
+     RESIZE HELPERS
+  ========================================= */
+
+  function getWindowNameFromElement(
+    windowElement: HTMLElement,
+  ): WindowName | null {
+    if (
+      windowElement.classList.contains(
+        "welcome-window",
+      )
+    ) {
+      return "welcome";
+    }
+
+    if (
+      windowElement.classList.contains(
+        "about-window",
+      )
+    ) {
+      return "about";
+    }
+
+    if (
+      windowElement.classList.contains(
+        "projects-window",
+      )
+    ) {
+      return "projects";
+    }
+
+    if (
+      windowElement.classList.contains(
+        "resume-window",
+      )
+    ) {
+      return "resume";
+    }
+
+    if (
+      windowElement.classList.contains(
+        "contact-window",
+      )
+    ) {
+      return "contact";
+    }
+
+    if (
+      windowElement.classList.contains(
+        "project-details-window",
+      )
+    ) {
+      return "projectDetails";
+    }
+
+    return null;
+  }
+
+  function saveWindowSize(
+    windowName: WindowName,
+    size: WindowSize,
+  ) {
+    if (windowName === "welcome") {
+      setWelcomeSize(size);
+      return;
+    }
+
+    if (windowName === "about") {
+      setAboutSize(size);
+      return;
+    }
+
+    if (windowName === "projects") {
+      setProjectsSize(size);
+      return;
+    }
+
+    if (windowName === "resume") {
+      setResumeSize(size);
+      return;
+    }
+
+    if (windowName === "contact") {
+      setContactSize(size);
+      return;
+    }
+
+    setProjectDetailsSize(size);
+  }
+
+  function handleWindowResizePointerDown(
+    event: ReactPointerEvent<HTMLElement>,
+  ) {
+    /*
+      Manual resizing is disabled on smaller screens.
+      Responsive CSS controls window size there.
+    */
+    if (window.innerWidth <= RESIZE_BREAKPOINT) {
+      return;
+    }
+
+    const target = event.target as HTMLElement;
+
+    const windowElement = target.closest(
+      ".xp-window",
+    ) as HTMLElement | null;
+
+    if (!windowElement) {
+      return;
+    }
+
+    if (
+      windowElement.classList.contains(
+        "maximized-window",
+      )
+    ) {
+      return;
+    }
+
+    const windowRectangle =
+      windowElement.getBoundingClientRect();
+
+    /*
+      Only begin resizing when the pointer is in the
+      bottom-right resize area.
+    */
+    const insideRightResizeArea =
+      event.clientX >=
+      windowRectangle.right - RESIZE_HANDLE_SIZE;
+
+    const insideBottomResizeArea =
+      event.clientY >=
+      windowRectangle.bottom - RESIZE_HANDLE_SIZE;
+
+    if (
+      !insideRightResizeArea ||
+      !insideBottomResizeArea
+    ) {
+      return;
+    }
+
+   const windowName =
+  getWindowNameFromElement(windowElement);
+
+if (!windowName) {
+  return;
 }
 
-   function showDesktop() {
-  if (welcomeOpen) {
-    setWelcomeMinimized(true);
+/*
+  Store the already-validated values in non-null constants.
+  TypeScript can safely use these inside the nested
+  pointer-move function.
+*/
+const resizingWindow = windowElement;
+const resizingWindowName = windowName;
+
+event.preventDefault();
+event.stopPropagation();
+
+setActiveWindow(resizingWindowName);
+
+    const startingPointerX = event.clientX;
+    const startingPointerY = event.clientY;
+
+    const startingWidth =
+      windowRectangle.width;
+
+    const startingHeight =
+      windowRectangle.height;
+
+    const minimumSize =
+      minimumWindowSizes[windowName];
+
+    const previousUserSelect =
+      document.body.style.userSelect;
+
+    const previousCursor =
+      document.body.style.cursor;
+
+    document.body.style.userSelect = "none";
+    document.body.style.cursor = "nwse-resize";
+
+    windowElement.classList.add(
+      "user-resized-window",
+    );
+
+    function handlePointerMove(
+      moveEvent: PointerEvent,
+    ) {
+      const widthChange =
+        moveEvent.clientX - startingPointerX;
+
+      const heightChange =
+        moveEvent.clientY - startingPointerY;
+
+      const requestedWidth =
+        startingWidth + widthChange;
+
+      const requestedHeight =
+        startingHeight + heightChange;
+
+      /*
+        The available dimensions stop resizing at the
+        right side of the browser and above the taskbar.
+      */
+      const availableWidth = Math.max(
+        220,
+        window.innerWidth -
+          windowRectangle.left -
+          4,
+      );
+
+      const availableHeight = Math.max(
+        180,
+        window.innerHeight -
+          TASKBAR_HEIGHT -
+          windowRectangle.top -
+          4,
+      );
+
+      const effectiveMinimumWidth =
+        Math.min(
+          minimumSize.width,
+          availableWidth,
+        );
+
+      const effectiveMinimumHeight =
+        Math.min(
+          minimumSize.height,
+          availableHeight,
+        );
+
+      const nextWidth = Math.min(
+        Math.max(
+          effectiveMinimumWidth,
+          requestedWidth,
+        ),
+        availableWidth,
+      );
+
+      const nextHeight = Math.min(
+        Math.max(
+          effectiveMinimumHeight,
+          requestedHeight,
+        ),
+        availableHeight,
+      );
+
+      const nextSize: WindowSize = {
+        width: nextWidth,
+        height: nextHeight,
+      };
+
+      /*
+        Update the DOM immediately so resizing feels
+        smooth while also saving the value in React.
+      */
+      resizingWindow.style.width =
+  `${nextWidth}px`;
+
+resizingWindow.style.height =
+  `${nextHeight}px`;
+
+resizingWindow.style.maxHeight = "none";
+
+saveWindowSize(
+  resizingWindowName,
+  nextSize,
+);
+    }
+
+    function stopResizing() {
+      document.body.style.userSelect =
+        previousUserSelect;
+
+      document.body.style.cursor =
+        previousCursor;
+
+      window.removeEventListener(
+        "pointermove",
+        handlePointerMove,
+      );
+
+      window.removeEventListener(
+        "pointerup",
+        stopResizing,
+      );
+
+      window.removeEventListener(
+        "pointercancel",
+        stopResizing,
+      );
+    }
+
+    window.addEventListener(
+      "pointermove",
+      handlePointerMove,
+    );
+
+    window.addEventListener(
+      "pointerup",
+      stopResizing,
+    );
+
+    window.addEventListener(
+      "pointercancel",
+      stopResizing,
+    );
   }
 
-  if (aboutOpen) {
-    setAboutMinimized(true);
+  /* =========================================
+     TASKBAR FUNCTIONS
+  ========================================= */
+
+  function handleWelcomeTaskbarClick() {
+    if (
+      activeWindow === "welcome" &&
+      !welcomeMinimized
+    ) {
+      minimizeWelcomeWindow();
+    } else {
+      openWelcomeWindow();
+    }
   }
 
-  if (projectsOpen) {
-    setProjectsMinimized(true);
+  function handleAboutTaskbarClick() {
+    if (
+      activeWindow === "about" &&
+      !aboutMinimized
+    ) {
+      minimizeAboutWindow();
+    } else {
+      openAboutWindow();
+    }
   }
 
-  if (resumeOpen) {
-    setResumeMinimized(true);
+  function handleProjectsTaskbarClick() {
+    if (
+      activeWindow === "projects" &&
+      !projectsMinimized
+    ) {
+      minimizeProjectsWindow();
+    } else {
+      openProjectsWindow();
+    }
   }
 
-  if (contactOpen) {
-    setContactMinimized(true);
+  function handleResumeTaskbarClick() {
+    if (
+      activeWindow === "resume" &&
+      !resumeMinimized
+    ) {
+      minimizeResumeWindow();
+    } else {
+      openResumeWindow();
+    }
   }
 
-  if (selectedProject) {
-    setProjectDetailsMinimized(true);
+  function handleContactTaskbarClick() {
+    if (
+      activeWindow === "contact" &&
+      !contactMinimized
+    ) {
+      minimizeContactWindow();
+    } else {
+      openContactWindow();
+    }
   }
 
-  setStartMenuOpen(false);
-  setSelectedDesktopIcon(null);
-  setActiveWindow("welcome");
-}
-    
-  function handleDesktopBackgroundClick(event: ReactMouseEvent<HTMLElement>) {
+  function handleProjectDetailsTaskbarClick() {
+    if (
+      activeWindow === "projectDetails" &&
+      !projectDetailsMinimized
+    ) {
+      minimizeProjectDetails();
+    } else {
+      restoreProjectDetails();
+    }
+  }
+
+  /* =========================================
+     START MENU
+  ========================================= */
+
+  function toggleStartMenu() {
+    setStartMenuOpen(
+      (currentValue) => !currentValue,
+    );
+  }
+
+  /* =========================================
+     SHOW DESKTOP
+  ========================================= */
+
+  function showDesktop() {
+    if (welcomeOpen) {
+      setWelcomeMinimized(true);
+    }
+
+    if (aboutOpen) {
+      setAboutMinimized(true);
+    }
+
+    if (projectsOpen) {
+      setProjectsMinimized(true);
+    }
+
+    if (resumeOpen) {
+      setResumeMinimized(true);
+    }
+
+    if (contactOpen) {
+      setContactMinimized(true);
+    }
+
+    if (selectedProject) {
+      setProjectDetailsMinimized(true);
+    }
+
+    setStartMenuOpen(false);
+    setSelectedDesktopIcon(null);
+    setActiveWindow("welcome");
+  }
+
+  /* =========================================
+     DESKTOP BACKGROUND
+  ========================================= */
+
+  function handleDesktopBackgroundClick(
+    event: ReactMouseEvent<HTMLElement>,
+  ) {
     if (event.target === event.currentTarget) {
       setSelectedDesktopIcon(null);
       setStartMenuOpen(false);
     }
   }
+
+  /* =========================================
+     WELCOME WINDOW
+  ========================================= */
 
   function openWelcomeWindow() {
     setWelcomeOpen(true);
@@ -199,7 +769,10 @@ function toggleStartMenu() {
   }
 
   function toggleWelcomeMaximize() {
-    setWelcomeMaximized((currentValue) => !currentValue);
+    setWelcomeMaximized(
+      (currentValue) => !currentValue,
+    );
+
     setWelcomeMinimized(false);
     setActiveWindow("welcome");
   }
@@ -208,76 +781,128 @@ function toggleStartMenu() {
     setWelcomeOpen(false);
     setWelcomeMinimized(false);
     setWelcomeMaximized(false);
+
+    /*
+      Closing resets custom size.
+    */
+    setWelcomeSize(null);
   }
 
-  function startDraggingWelcome(event: ReactPointerEvent<HTMLElement>) {
-    if (welcomeMaximized || window.innerWidth <= 700) {
+  function startDraggingWelcome(
+    event: ReactPointerEvent<HTMLElement>,
+  ) {
+    if (
+      welcomeMaximized ||
+      window.innerWidth <= 700
+    ) {
       return;
     }
 
-    if ((event.target as HTMLElement).closest(".window-controls")) {
+    if (
+      (event.target as HTMLElement).closest(
+        ".window-controls",
+      )
+    ) {
       return;
     }
 
-    const windowElement = event.currentTarget.closest(
-      ".xp-window",
-    ) as HTMLElement | null;
+    const windowElement =
+      event.currentTarget.closest(
+        ".xp-window",
+      ) as HTMLElement | null;
 
     if (!windowElement) {
       return;
     }
 
     event.preventDefault();
+
     setActiveWindow("welcome");
 
-    const windowRectangle = windowElement.getBoundingClientRect();
+    const windowRectangle =
+      windowElement.getBoundingClientRect();
 
-    const pointerOffsetX = event.clientX - windowRectangle.left;
+    const pointerOffsetX =
+      event.clientX - windowRectangle.left;
 
-    const pointerOffsetY = event.clientY - windowRectangle.top;
+    const pointerOffsetY =
+      event.clientY - windowRectangle.top;
 
-    function handlePointerMove(moveEvent: PointerEvent) {
-  const minimumX =
-    -(windowRectangle.width - MIN_VISIBLE_WINDOW_WIDTH);
+    function handlePointerMove(
+      moveEvent: PointerEvent,
+    ) {
+      const minimumX =
+        -(
+          windowRectangle.width -
+          MIN_VISIBLE_WINDOW_WIDTH
+        );
 
-  const maximumX =
-    window.innerWidth - MIN_VISIBLE_WINDOW_WIDTH;
+      const maximumX =
+        window.innerWidth -
+        MIN_VISIBLE_WINDOW_WIDTH;
 
-  const maximumY = Math.max(
-    0,
-    window.innerHeight - TASKBAR_HEIGHT - TITLE_BAR_HEIGHT,
-  );
+      const maximumY = Math.max(
+        0,
+        window.innerHeight -
+          TASKBAR_HEIGHT -
+          TITLE_BAR_HEIGHT,
+      );
 
-  const newX =
-    moveEvent.clientX - pointerOffsetX;
+      const newX =
+        moveEvent.clientX - pointerOffsetX;
 
-  const newY =
-    moveEvent.clientY - pointerOffsetY;
+      const newY =
+        moveEvent.clientY - pointerOffsetY;
 
-  setWelcomePosition({
-    x: Math.min(
-      Math.max(minimumX, newX),
-      maximumX,
-    ),
+      setWelcomePosition({
+        x: Math.min(
+          Math.max(minimumX, newX),
+          maximumX,
+        ),
 
-    y: Math.min(
-      Math.max(0, newY),
-      maximumY,
-    ),
-  });
-}
-
-    function stopDragging() {
-      window.removeEventListener("pointermove", handlePointerMove);
-
-      window.removeEventListener("pointerup", stopDragging);
-      window.removeEventListener("pointercancel", stopDragging);
+        y: Math.min(
+          Math.max(0, newY),
+          maximumY,
+        ),
+      });
     }
 
-    window.addEventListener("pointermove", handlePointerMove);
-    window.addEventListener("pointerup", stopDragging);
-    window.addEventListener("pointercancel", stopDragging);
+    function stopDragging() {
+      window.removeEventListener(
+        "pointermove",
+        handlePointerMove,
+      );
+
+      window.removeEventListener(
+        "pointerup",
+        stopDragging,
+      );
+
+      window.removeEventListener(
+        "pointercancel",
+        stopDragging,
+      );
+    }
+
+    window.addEventListener(
+      "pointermove",
+      handlePointerMove,
+    );
+
+    window.addEventListener(
+      "pointerup",
+      stopDragging,
+    );
+
+    window.addEventListener(
+      "pointercancel",
+      stopDragging,
+    );
   }
+
+  /* =========================================
+     ABOUT WINDOW
+  ========================================= */
 
   function openAboutWindow() {
     setAboutOpen(true);
@@ -295,7 +920,10 @@ function toggleStartMenu() {
   }
 
   function toggleAboutMaximize() {
-    setAboutMaximized((currentValue) => !currentValue);
+    setAboutMaximized(
+      (currentValue) => !currentValue,
+    );
+
     setAboutMinimized(false);
     setActiveWindow("about");
   }
@@ -305,84 +933,131 @@ function toggleStartMenu() {
     setAboutMinimized(false);
     setAboutMaximized(false);
     setAboutPosition(null);
+    setAboutSize(null);
 
     if (activeWindow === "about") {
       setActiveWindow("welcome");
     }
   }
 
-  function startDraggingAbout(event: ReactPointerEvent<HTMLElement>) {
-    if (aboutMaximized || window.innerWidth <= 700) {
+  function startDraggingAbout(
+    event: ReactPointerEvent<HTMLElement>,
+  ) {
+    if (
+      aboutMaximized ||
+      window.innerWidth <= 700
+    ) {
       return;
     }
 
-
-    if ((event.target as HTMLElement).closest(".window-controls")) {
+    if (
+      (event.target as HTMLElement).closest(
+        ".window-controls",
+      )
+    ) {
       return;
     }
 
-    const windowElement = event.currentTarget.closest(
-      ".xp-window",
-    ) as HTMLElement | null;
+    const windowElement =
+      event.currentTarget.closest(
+        ".xp-window",
+      ) as HTMLElement | null;
 
     if (!windowElement) {
       return;
     }
 
     event.preventDefault();
+
     setActiveWindow("about");
 
-    const windowRectangle = windowElement.getBoundingClientRect();
+    const windowRectangle =
+      windowElement.getBoundingClientRect();
 
-    const pointerOffsetX = event.clientX - windowRectangle.left;
+    const pointerOffsetX =
+      event.clientX - windowRectangle.left;
 
-    const pointerOffsetY = event.clientY - windowRectangle.top;
+    const pointerOffsetY =
+      event.clientY - windowRectangle.top;
 
-    function handlePointerMove(moveEvent: PointerEvent) {
-  const minimumX =
-    -(windowRectangle.width - MIN_VISIBLE_WINDOW_WIDTH);
+    function handlePointerMove(
+      moveEvent: PointerEvent,
+    ) {
+      const minimumX =
+        -(
+          windowRectangle.width -
+          MIN_VISIBLE_WINDOW_WIDTH
+        );
 
-  const maximumX =
-    window.innerWidth - MIN_VISIBLE_WINDOW_WIDTH;
+      const maximumX =
+        window.innerWidth -
+        MIN_VISIBLE_WINDOW_WIDTH;
 
-  const maximumY = Math.max(
-    0,
-    window.innerHeight - TASKBAR_HEIGHT - TITLE_BAR_HEIGHT,
-  );
+      const maximumY = Math.max(
+        0,
+        window.innerHeight -
+          TASKBAR_HEIGHT -
+          TITLE_BAR_HEIGHT,
+      );
 
-  const newX =
-    moveEvent.clientX - pointerOffsetX;
+      const newX =
+        moveEvent.clientX - pointerOffsetX;
 
-  const newY =
-    moveEvent.clientY - pointerOffsetY;
+      const newY =
+        moveEvent.clientY - pointerOffsetY;
 
-  setAboutPosition({
-    x: Math.min(
-      Math.max(minimumX, newX),
-      maximumX,
-    ),
+      setAboutPosition({
+        x: Math.min(
+          Math.max(minimumX, newX),
+          maximumX,
+        ),
 
-    y: Math.min(
-      Math.max(0, newY),
-      maximumY,
-    ),
-  });
-}
-
-    function stopDragging() {
-      window.removeEventListener("pointermove", handlePointerMove);
-
-      window.removeEventListener("pointerup", stopDragging);
-      window.removeEventListener("pointercancel", stopDragging);
+        y: Math.min(
+          Math.max(0, newY),
+          maximumY,
+        ),
+      });
     }
 
-    window.addEventListener("pointermove", handlePointerMove);
-    window.addEventListener("pointerup", stopDragging);
-    window.addEventListener("pointercancel", stopDragging);
+    function stopDragging() {
+      window.removeEventListener(
+        "pointermove",
+        handlePointerMove,
+      );
+
+      window.removeEventListener(
+        "pointerup",
+        stopDragging,
+      );
+
+      window.removeEventListener(
+        "pointercancel",
+        stopDragging,
+      );
+    }
+
+    window.addEventListener(
+      "pointermove",
+      handlePointerMove,
+    );
+
+    window.addEventListener(
+      "pointerup",
+      stopDragging,
+    );
+
+    window.addEventListener(
+      "pointercancel",
+      stopDragging,
+    );
   }
 
+  /* =========================================
+     PROJECTS WINDOW
+  ========================================= */
+
   function openProjectsWindow() {
-    setProjectsOpen(true)
+    setProjectsOpen(true);
     setProjectsMinimized(false);
     setActiveWindow("projects");
     setStartMenuOpen(false);
@@ -397,7 +1072,10 @@ function toggleStartMenu() {
   }
 
   function toggleProjectsMaximize() {
-    setProjectsMaximized((currentValue) => !currentValue);
+    setProjectsMaximized(
+      (currentValue) => !currentValue,
+    );
+
     setProjectsMinimized(false);
     setActiveWindow("projects");
   }
@@ -407,80 +1085,128 @@ function toggleStartMenu() {
     setProjectsMinimized(false);
     setProjectsMaximized(false);
     setProjectsPosition(null);
+    setProjectsSize(null);
 
     if (activeWindow === "projects") {
       setActiveWindow("welcome");
     }
   }
 
-  function startDraggingProjects(event: ReactPointerEvent<HTMLElement>) {
-    if (projectsMaximized || window.innerWidth <= 700) {
+  function startDraggingProjects(
+    event: ReactPointerEvent<HTMLElement>,
+  ) {
+    if (
+      projectsMaximized ||
+      window.innerWidth <= 700
+    ) {
       return;
     }
 
-    if ((event.target as HTMLElement).closest(".window-controls")) {
+    if (
+      (event.target as HTMLElement).closest(
+        ".window-controls",
+      )
+    ) {
       return;
     }
 
-    const windowElement = event.currentTarget.closest(
-      ".xp-window",
-    ) as HTMLElement | null;
+    const windowElement =
+      event.currentTarget.closest(
+        ".xp-window",
+      ) as HTMLElement | null;
 
     if (!windowElement) {
       return;
     }
 
     event.preventDefault();
+
     setActiveWindow("projects");
 
-    const windowRectangle = windowElement.getBoundingClientRect();
+    const windowRectangle =
+      windowElement.getBoundingClientRect();
 
-    const pointerOffsetX = event.clientX - windowRectangle.left;
+    const pointerOffsetX =
+      event.clientX - windowRectangle.left;
 
-    const pointerOffsetY = event.clientY - windowRectangle.top;
+    const pointerOffsetY =
+      event.clientY - windowRectangle.top;
 
-    function handlePointerMove(moveEvent: PointerEvent) {
-  const minimumX =
-    -(windowRectangle.width - MIN_VISIBLE_WINDOW_WIDTH);
+    function handlePointerMove(
+      moveEvent: PointerEvent,
+    ) {
+      const minimumX =
+        -(
+          windowRectangle.width -
+          MIN_VISIBLE_WINDOW_WIDTH
+        );
 
-  const maximumX =
-    window.innerWidth - MIN_VISIBLE_WINDOW_WIDTH;
+      const maximumX =
+        window.innerWidth -
+        MIN_VISIBLE_WINDOW_WIDTH;
 
-  const maximumY = Math.max(
-    0,
-    window.innerHeight - TASKBAR_HEIGHT - TITLE_BAR_HEIGHT,
-  );
+      const maximumY = Math.max(
+        0,
+        window.innerHeight -
+          TASKBAR_HEIGHT -
+          TITLE_BAR_HEIGHT,
+      );
 
-  const newX =
-    moveEvent.clientX - pointerOffsetX;
+      const newX =
+        moveEvent.clientX - pointerOffsetX;
 
-  const newY =
-    moveEvent.clientY - pointerOffsetY;
+      const newY =
+        moveEvent.clientY - pointerOffsetY;
 
-  setProjectsPosition({
-    x: Math.min(
-      Math.max(minimumX, newX),
-      maximumX,
-    ),
+      setProjectsPosition({
+        x: Math.min(
+          Math.max(minimumX, newX),
+          maximumX,
+        ),
 
-    y: Math.min(
-      Math.max(0, newY),
-      maximumY,
-    ),
-  });
-}
-
-    function stopDragging() {
-      window.removeEventListener("pointermove", handlePointerMove);
-
-      window.removeEventListener("pointerup", stopDragging);
-      window.removeEventListener("pointercancel", stopDragging);
+        y: Math.min(
+          Math.max(0, newY),
+          maximumY,
+        ),
+      });
     }
 
-    window.addEventListener("pointermove", handlePointerMove);
-    window.addEventListener("pointerup", stopDragging);
-    window.addEventListener("pointercancel", stopDragging);
+    function stopDragging() {
+      window.removeEventListener(
+        "pointermove",
+        handlePointerMove,
+      );
+
+      window.removeEventListener(
+        "pointerup",
+        stopDragging,
+      );
+
+      window.removeEventListener(
+        "pointercancel",
+        stopDragging,
+      );
+    }
+
+    window.addEventListener(
+      "pointermove",
+      handlePointerMove,
+    );
+
+    window.addEventListener(
+      "pointerup",
+      stopDragging,
+    );
+
+    window.addEventListener(
+      "pointercancel",
+      stopDragging,
+    );
   }
+
+  /* =========================================
+     RESUME WINDOW
+  ========================================= */
 
   function openResumeWindow() {
     setResumeOpen(true);
@@ -498,7 +1224,10 @@ function toggleStartMenu() {
   }
 
   function toggleResumeMaximize() {
-    setResumeMaximized((currentValue) => !currentValue);
+    setResumeMaximized(
+      (currentValue) => !currentValue,
+    );
+
     setResumeMinimized(false);
     setActiveWindow("resume");
   }
@@ -508,80 +1237,128 @@ function toggleStartMenu() {
     setResumeMinimized(false);
     setResumeMaximized(false);
     setResumePosition(null);
+    setResumeSize(null);
 
     if (activeWindow === "resume") {
       setActiveWindow("welcome");
     }
   }
 
-  function startDraggingResume(event: ReactPointerEvent<HTMLElement>) {
-    if (resumeMaximized || window.innerWidth <= 700) {
+  function startDraggingResume(
+    event: ReactPointerEvent<HTMLElement>,
+  ) {
+    if (
+      resumeMaximized ||
+      window.innerWidth <= 700
+    ) {
       return;
     }
 
-    if ((event.target as HTMLElement).closest(".window-controls")) {
+    if (
+      (event.target as HTMLElement).closest(
+        ".window-controls",
+      )
+    ) {
       return;
     }
 
-    const windowElement = event.currentTarget.closest(
-      ".xp-window",
-    ) as HTMLElement | null;
+    const windowElement =
+      event.currentTarget.closest(
+        ".xp-window",
+      ) as HTMLElement | null;
 
     if (!windowElement) {
       return;
     }
 
     event.preventDefault();
+
     setActiveWindow("resume");
 
-    const windowRectangle = windowElement.getBoundingClientRect();
+    const windowRectangle =
+      windowElement.getBoundingClientRect();
 
-    const pointerOffsetX = event.clientX - windowRectangle.left;
+    const pointerOffsetX =
+      event.clientX - windowRectangle.left;
 
-    const pointerOffsetY = event.clientY - windowRectangle.top;
+    const pointerOffsetY =
+      event.clientY - windowRectangle.top;
 
-    function handlePointerMove(moveEvent: PointerEvent) {
-  const minimumX =
-    -(windowRectangle.width - MIN_VISIBLE_WINDOW_WIDTH);
+    function handlePointerMove(
+      moveEvent: PointerEvent,
+    ) {
+      const minimumX =
+        -(
+          windowRectangle.width -
+          MIN_VISIBLE_WINDOW_WIDTH
+        );
 
-  const maximumX =
-    window.innerWidth - MIN_VISIBLE_WINDOW_WIDTH;
+      const maximumX =
+        window.innerWidth -
+        MIN_VISIBLE_WINDOW_WIDTH;
 
-  const maximumY = Math.max(
-    0,
-    window.innerHeight - TASKBAR_HEIGHT - TITLE_BAR_HEIGHT,
-  );
+      const maximumY = Math.max(
+        0,
+        window.innerHeight -
+          TASKBAR_HEIGHT -
+          TITLE_BAR_HEIGHT,
+      );
 
-  const newX =
-    moveEvent.clientX - pointerOffsetX;
+      const newX =
+        moveEvent.clientX - pointerOffsetX;
 
-  const newY =
-    moveEvent.clientY - pointerOffsetY;
+      const newY =
+        moveEvent.clientY - pointerOffsetY;
 
-  setResumePosition({
-    x: Math.min(
-      Math.max(minimumX, newX),
-      maximumX,
-    ),
+      setResumePosition({
+        x: Math.min(
+          Math.max(minimumX, newX),
+          maximumX,
+        ),
 
-    y: Math.min(
-      Math.max(0, newY),
-      maximumY,
-    ),
-  });
-}
-
-    function stopDragging() {
-      window.removeEventListener("pointermove", handlePointerMove);
-
-      window.removeEventListener("pointerup", stopDragging);
-      window.removeEventListener("pointercancel", stopDragging);
+        y: Math.min(
+          Math.max(0, newY),
+          maximumY,
+        ),
+      });
     }
 
-    window.addEventListener("pointermove", handlePointerMove);
-    window.addEventListener("pointerup", stopDragging);
-    window.addEventListener("pointercancel", stopDragging);
+    function stopDragging() {
+      window.removeEventListener(
+        "pointermove",
+        handlePointerMove,
+      );
+
+      window.removeEventListener(
+        "pointerup",
+        stopDragging,
+      );
+
+      window.removeEventListener(
+        "pointercancel",
+        stopDragging,
+      );
+    }
+
+    window.addEventListener(
+      "pointermove",
+      handlePointerMove,
+    );
+
+    window.addEventListener(
+      "pointerup",
+      stopDragging,
+    );
+
+    window.addEventListener(
+      "pointercancel",
+      stopDragging,
+    );
   }
+
+  /* =========================================
+     CONTACT WINDOW
+  ========================================= */
 
   function openContactWindow() {
     setContactOpen(true);
@@ -589,6 +1366,7 @@ function toggleStartMenu() {
     setActiveWindow("contact");
     setStartMenuOpen(false);
   }
+
   function minimizeContactWindow() {
     setContactMinimized(true);
 
@@ -598,7 +1376,10 @@ function toggleStartMenu() {
   }
 
   function toggleContactMaximize() {
-    setContactMaximized((currentValue) => !currentValue);
+    setContactMaximized(
+      (currentValue) => !currentValue,
+    );
+
     setContactMinimized(false);
     setActiveWindow("contact");
   }
@@ -608,88 +1389,148 @@ function toggleStartMenu() {
     setContactMinimized(false);
     setContactMaximized(false);
     setContactPosition(null);
+    setContactSize(null);
 
     if (activeWindow === "contact") {
       setActiveWindow("welcome");
     }
   }
 
-  function startDraggingContact(event: ReactPointerEvent<HTMLElement>) {
-    if (contactMaximized || window.innerWidth <= 700) {
+  function startDraggingContact(
+    event: ReactPointerEvent<HTMLElement>,
+  ) {
+    if (
+      contactMaximized ||
+      window.innerWidth <= 700
+    ) {
       return;
     }
 
-    if ((event.target as HTMLElement).closest(".window-controls")) {
+    if (
+      (event.target as HTMLElement).closest(
+        ".window-controls",
+      )
+    ) {
       return;
     }
 
-    const windowElement = event.currentTarget.closest(
-      ".xp-window",
-    ) as HTMLElement | null;
+    const windowElement =
+      event.currentTarget.closest(
+        ".xp-window",
+      ) as HTMLElement | null;
 
     if (!windowElement) {
       return;
     }
 
     event.preventDefault();
+
     setActiveWindow("contact");
 
-    const windowRectangle = windowElement.getBoundingClientRect();
+    const windowRectangle =
+      windowElement.getBoundingClientRect();
 
-    const pointerOffsetX = event.clientX - windowRectangle.left;
+    const pointerOffsetX =
+      event.clientX - windowRectangle.left;
 
-    const pointerOffsetY = event.clientY - windowRectangle.top;
+    const pointerOffsetY =
+      event.clientY - windowRectangle.top;
 
-    function handlePointerMove(moveEvent: PointerEvent) {
-  const minimumX =
-    -(windowRectangle.width - MIN_VISIBLE_WINDOW_WIDTH);
+    function handlePointerMove(
+      moveEvent: PointerEvent,
+    ) {
+      const minimumX =
+        -(
+          windowRectangle.width -
+          MIN_VISIBLE_WINDOW_WIDTH
+        );
 
-  const maximumX =
-    window.innerWidth - MIN_VISIBLE_WINDOW_WIDTH;
+      const maximumX =
+        window.innerWidth -
+        MIN_VISIBLE_WINDOW_WIDTH;
 
-  const maximumY = Math.max(
-    0,
-    window.innerHeight - TASKBAR_HEIGHT - TITLE_BAR_HEIGHT,
-  );
+      const maximumY = Math.max(
+        0,
+        window.innerHeight -
+          TASKBAR_HEIGHT -
+          TITLE_BAR_HEIGHT,
+      );
 
-  const newX =
-    moveEvent.clientX - pointerOffsetX;
+      const newX =
+        moveEvent.clientX - pointerOffsetX;
 
-  const newY =
-    moveEvent.clientY - pointerOffsetY;
+      const newY =
+        moveEvent.clientY - pointerOffsetY;
 
-  setContactPosition({
-    x: Math.min(
-      Math.max(minimumX, newX),
-      maximumX,
-    ),
+      setContactPosition({
+        x: Math.min(
+          Math.max(minimumX, newX),
+          maximumX,
+        ),
 
-    y: Math.min(
-      Math.max(0, newY),
-      maximumY,
-    ),
-  });
-}
-
-    function stopDragging() {
-      window.removeEventListener("pointermove", handlePointerMove);
-
-      window.removeEventListener("pointerup", stopDragging);
-      window.removeEventListener("pointercancel", stopDragging);
+        y: Math.min(
+          Math.max(0, newY),
+          maximumY,
+        ),
+      });
     }
 
-    window.addEventListener("pointermove", handlePointerMove);
-    window.addEventListener("pointerup", stopDragging);
-    window.addEventListener("pointercancel", stopDragging);
+    function stopDragging() {
+      window.removeEventListener(
+        "pointermove",
+        handlePointerMove,
+      );
+
+      window.removeEventListener(
+        "pointerup",
+        stopDragging,
+      );
+
+      window.removeEventListener(
+        "pointercancel",
+        stopDragging,
+      );
+    }
+
+    window.addEventListener(
+      "pointermove",
+      handlePointerMove,
+    );
+
+    window.addEventListener(
+      "pointerup",
+      stopDragging,
+    );
+
+    window.addEventListener(
+      "pointercancel",
+      stopDragging,
+    );
   }
 
-  function openProjectDetails(project: PortfolioProject) {
+  /* =========================================
+     PROJECT DETAILS WINDOW
+  ========================================= */
+
+  function openProjectDetails(
+    project: PortfolioProject,
+  ) {
     setSelectedProject(project);
+
     setProjectDetailsMinimized(false);
     setProjectDetailsMaximized(false);
+
     setActiveWindow("projectDetails");
+
     setStartMenuOpen(false);
+
     setProjectDetailsPosition(null);
+
+    /*
+      A different project opens at the
+      default Project Details size.
+    */
+    setProjectDetailsSize(null);
   }
 
   function restoreProjectDetails() {
@@ -704,8 +1545,13 @@ function toggleStartMenu() {
   function minimizeProjectDetails() {
     setProjectDetailsMinimized(true);
 
-    if (activeWindow === "projectDetails") {
-      if (projectsOpen && !projectsMinimized) {
+    if (
+      activeWindow === "projectDetails"
+    ) {
+      if (
+        projectsOpen &&
+        !projectsMinimized
+      ) {
         setActiveWindow("projects");
       } else {
         setActiveWindow("welcome");
@@ -714,7 +1560,9 @@ function toggleStartMenu() {
   }
 
   function toggleProjectDetailsMaximize() {
-    setProjectDetailsMaximized((currentValue) => !currentValue);
+    setProjectDetailsMaximized(
+      (currentValue) => !currentValue,
+    );
 
     setProjectDetailsMinimized(false);
     setActiveWindow("projectDetails");
@@ -722,87 +1570,144 @@ function toggleStartMenu() {
 
   function closeProjectDetails() {
     setSelectedProject(null);
+
     setProjectDetailsMinimized(false);
+
     setProjectDetailsMaximized(false);
+
     setProjectDetailsPosition(null);
 
-    if (projectsOpen && !projectsMinimized) {
+    setProjectDetailsSize(null);
+
+    if (
+      projectsOpen &&
+      !projectsMinimized
+    ) {
       setActiveWindow("projects");
     } else {
       setActiveWindow("welcome");
     }
   }
 
-  function startDraggingProjectDetails(event: ReactPointerEvent<HTMLElement>) {
-    if (projectDetailsMaximized || window.innerWidth <= 700) {
+  function startDraggingProjectDetails(
+    event: ReactPointerEvent<HTMLElement>,
+  ) {
+    if (
+      projectDetailsMaximized ||
+      window.innerWidth <= 700
+    ) {
       return;
     }
 
-    if ((event.target as HTMLElement).closest(".window-controls")) {
+    if (
+      (event.target as HTMLElement).closest(
+        ".window-controls",
+      )
+    ) {
       return;
     }
 
-    const windowElement = event.currentTarget.closest(
-      ".xp-window",
-    ) as HTMLElement | null;
+    const windowElement =
+      event.currentTarget.closest(
+        ".xp-window",
+      ) as HTMLElement | null;
 
     if (!windowElement) {
       return;
     }
 
     event.preventDefault();
+
     setActiveWindow("projectDetails");
 
-    const windowRectangle = windowElement.getBoundingClientRect();
+    const windowRectangle =
+      windowElement.getBoundingClientRect();
 
-    const pointerOffsetX = event.clientX - windowRectangle.left;
+    const pointerOffsetX =
+      event.clientX - windowRectangle.left;
 
-    const pointerOffsetY = event.clientY - windowRectangle.top;
+    const pointerOffsetY =
+      event.clientY - windowRectangle.top;
 
-    function handlePointerMove(moveEvent: PointerEvent) {
-  const minimumX =
-    -(windowRectangle.width - MIN_VISIBLE_WINDOW_WIDTH);
+    function handlePointerMove(
+      moveEvent: PointerEvent,
+    ) {
+      const minimumX =
+        -(
+          windowRectangle.width -
+          MIN_VISIBLE_WINDOW_WIDTH
+        );
 
-  const maximumX =
-    window.innerWidth - MIN_VISIBLE_WINDOW_WIDTH;
+      const maximumX =
+        window.innerWidth -
+        MIN_VISIBLE_WINDOW_WIDTH;
 
-  const maximumY = Math.max(
-    0,
-    window.innerHeight - TASKBAR_HEIGHT - TITLE_BAR_HEIGHT,
-  );
+      const maximumY = Math.max(
+        0,
+        window.innerHeight -
+          TASKBAR_HEIGHT -
+          TITLE_BAR_HEIGHT,
+      );
 
-  const newX =
-    moveEvent.clientX - pointerOffsetX;
+      const newX =
+        moveEvent.clientX - pointerOffsetX;
 
-  const newY =
-    moveEvent.clientY - pointerOffsetY;
+      const newY =
+        moveEvent.clientY - pointerOffsetY;
 
-  setProjectDetailsPosition({
-    x: Math.min(
-      Math.max(minimumX, newX),
-      maximumX,
-    ),
+      setProjectDetailsPosition({
+        x: Math.min(
+          Math.max(minimumX, newX),
+          maximumX,
+        ),
 
-    y: Math.min(
-      Math.max(0, newY),
-      maximumY,
-    ),
-  });
-}
-
-    function stopDragging() {
-      window.removeEventListener("pointermove", handlePointerMove);
-
-      window.removeEventListener("pointerup", stopDragging);
-      window.removeEventListener("pointercancel", stopDragging);
+        y: Math.min(
+          Math.max(0, newY),
+          maximumY,
+        ),
+      });
     }
 
-    window.addEventListener("pointermove", handlePointerMove);
-    window.addEventListener("pointerup", stopDragging);
-    window.addEventListener("pointercancel", stopDragging);
+    function stopDragging() {
+      window.removeEventListener(
+        "pointermove",
+        handlePointerMove,
+      );
+
+      window.removeEventListener(
+        "pointerup",
+        stopDragging,
+      );
+
+      window.removeEventListener(
+        "pointercancel",
+        stopDragging,
+      );
+    }
+
+    window.addEventListener(
+      "pointermove",
+      handlePointerMove,
+    );
+
+    window.addEventListener(
+      "pointerup",
+      stopDragging,
+    );
+
+    window.addEventListener(
+      "pointercancel",
+      stopDragging,
+    );
   }
 
-  function handleDesktopIcon(iconId: DesktopIconId) {
+  /* =========================================
+     DESKTOP ICONS
+  ========================================= */
+
+  function handleDesktopIcon(
+    iconId: DesktopIconId,
+  ) {
     if (iconId === "about") {
       openAboutWindow();
     }
@@ -820,154 +1725,238 @@ function toggleStartMenu() {
     }
   }
 
+  /* =========================================
+     RENDER
+  ========================================= */
+
   return (
-    <main className="desktop" onMouseDown={handleDesktopBackgroundClick}>
-<DesktopIcons
-  selectedIcon={selectedDesktopIcon}
-  onSelectIcon={setSelectedDesktopIcon}
-  onOpenIcon={handleDesktopIcon}
-  onClearSelection={() => setSelectedDesktopIcon(null)}
-/>
+    <main
+      className="desktop"
+      onMouseDown={handleDesktopBackgroundClick}
+      onPointerDownCapture={
+        handleWindowResizePointerDown
+      }
+    >
+      <DesktopIcons
+        selectedIcon={selectedDesktopIcon}
+        onSelectIcon={setSelectedDesktopIcon}
+        onOpenIcon={handleDesktopIcon}
+        onClearSelection={() =>
+          setSelectedDesktopIcon(null)
+        }
+      />
+
       {/* Welcome window */}
-{welcomeOpen && !welcomeMinimized && (
-  <WelcomeWindow
-  profile={profile}
-    isActive={activeWindow === "welcome"}
-    isMaximized={welcomeMaximized}
-    position={welcomePosition}
-    onFocus={() => setActiveWindow("welcome")}
-    onClose={closeWelcomeWindow}
-    onMinimize={minimizeWelcomeWindow}
-    onMaximize={toggleWelcomeMaximize}
-    onOpenProjects={openProjectsWindow}
-    onOpenResume={openResumeWindow}
-    onTitleBarPointerDown={startDraggingWelcome}
-  />
-)}
+
+      {welcomeOpen && !welcomeMinimized && (
+        <WelcomeWindow
+          profile={profile}
+          isActive={
+            activeWindow === "welcome"
+          }
+          isMaximized={welcomeMaximized}
+          position={welcomePosition}
+          onFocus={() =>
+            setActiveWindow("welcome")
+          }
+          onClose={closeWelcomeWindow}
+          onMinimize={minimizeWelcomeWindow}
+          onMaximize={toggleWelcomeMaximize}
+          onOpenProjects={openProjectsWindow}
+          onOpenResume={openResumeWindow}
+          onTitleBarPointerDown={
+            startDraggingWelcome
+          }
+        />
+      )}
 
       {/* About Me window */}
-{aboutOpen && !aboutMinimized && (
-  <AboutWindow
-  profile={profile}
-    isActive={activeWindow === "about"}
-    isMaximized={aboutMaximized}
-    position={aboutPosition}
-    onFocus={() => setActiveWindow("about")}
-    onClose={closeAboutWindow}
-    onMinimize={minimizeAboutWindow}
-    onMaximize={toggleAboutMaximize}
-    onTitleBarPointerDown={startDraggingAbout}
-  />
-)}
+
+      {aboutOpen && !aboutMinimized && (
+        <AboutWindow
+          profile={profile}
+          isActive={activeWindow === "about"}
+          isMaximized={aboutMaximized}
+          position={aboutPosition}
+          onFocus={() =>
+            setActiveWindow("about")
+          }
+          onClose={closeAboutWindow}
+          onMinimize={minimizeAboutWindow}
+          onMaximize={toggleAboutMaximize}
+          onTitleBarPointerDown={
+            startDraggingAbout
+          }
+        />
+      )}
+
       {/* Resume window */}
+
       {resumeOpen && !resumeMinimized && (
         <ResumeWindow
-        profile={profile}
-        projects={projects}
-          isActive={activeWindow === "resume"}
+          profile={profile}
+          projects={projects}
+          isActive={
+            activeWindow === "resume"
+          }
           isMaximized={resumeMaximized}
           position={resumePosition}
-          onFocus={() => setActiveWindow("resume")}
+          onFocus={() =>
+            setActiveWindow("resume")
+          }
           onClose={closeResumeWindow}
           onMinimize={minimizeResumeWindow}
           onMaximize={toggleResumeMaximize}
-          onTitleBarPointerDown={startDraggingResume}
+          onTitleBarPointerDown={
+            startDraggingResume
+          }
         />
       )}
+
       {/* Contact window */}
+
       {contactOpen && !contactMinimized && (
         <ContactWindow
-        profile={profile}
-          isActive={activeWindow === "contact"}
+          profile={profile}
+          isActive={
+            activeWindow === "contact"
+          }
           isMaximized={contactMaximized}
           position={contactPosition}
-          onFocus={() => setActiveWindow("contact")}
+          onFocus={() =>
+            setActiveWindow("contact")
+          }
           onClose={closeContactWindow}
           onMinimize={minimizeContactWindow}
           onMaximize={toggleContactMaximize}
-          onTitleBarPointerDown={startDraggingContact}
+          onTitleBarPointerDown={
+            startDraggingContact
+          }
         />
       )}
 
       {/* Projects window */}
-{projectsOpen && !projectsMinimized && (
-  <ProjectsWindow
-    projects={projects}
-    isActive={activeWindow === "projects"}
-    isMaximized={projectsMaximized}
-    position={projectsPosition}
-    onFocus={() => setActiveWindow("projects")}
-    onClose={closeProjectsWindow}
-    onMinimize={minimizeProjectsWindow}
-    onMaximize={toggleProjectsMaximize}
-    onOpenProject={openProjectDetails}
-    onTitleBarPointerDown={startDraggingProjects}
-  />
-)}
-      {/* Project details window */}
-      {selectedProject && !projectDetailsMinimized && (
-        <ProjectDetailsWindow
-          project={selectedProject}
-          isActive={activeWindow === "projectDetails"}
-          isMaximized={projectDetailsMaximized}
-          position={projectDetailsPosition}
-          onFocus={() => setActiveWindow("projectDetails")}
-          onClose={closeProjectDetails}
-          onMinimize={minimizeProjectDetails}
-          onMaximize={toggleProjectDetailsMaximize}
-          onTitleBarPointerDown={startDraggingProjectDetails}
+
+      {projectsOpen && !projectsMinimized && (
+        <ProjectsWindow
+          projects={projects}
+          isActive={
+            activeWindow === "projects"
+          }
+          isMaximized={projectsMaximized}
+          position={projectsPosition}
+          onFocus={() =>
+            setActiveWindow("projects")
+          }
+          onClose={closeProjectsWindow}
+          onMinimize={minimizeProjectsWindow}
+          onMaximize={
+            toggleProjectsMaximize
+          }
+          onOpenProject={openProjectDetails}
+          onTitleBarPointerDown={
+            startDraggingProjects
+          }
         />
       )}
+
+      {/* Project details window */}
+
+      {selectedProject &&
+        !projectDetailsMinimized && (
+          <ProjectDetailsWindow
+            project={selectedProject}
+            isActive={
+              activeWindow ===
+              "projectDetails"
+            }
+            isMaximized={
+              projectDetailsMaximized
+            }
+            position={projectDetailsPosition}
+            onFocus={() =>
+              setActiveWindow(
+                "projectDetails",
+              )
+            }
+            onClose={closeProjectDetails}
+            onMinimize={
+              minimizeProjectDetails
+            }
+            onMaximize={
+              toggleProjectDetailsMaximize
+            }
+            onTitleBarPointerDown={
+              startDraggingProjectDetails
+            }
+          />
+        )}
+
       {/* Start menu */}
+
       <StartMenu
-      profile={profile}
+        profile={profile}
         isOpen={startMenuOpen}
-        onClose={() => setStartMenuOpen(false)}
+        onClose={() =>
+          setStartMenuOpen(false)
+        }
         onOpenWelcome={openWelcomeWindow}
         onOpenAbout={openAboutWindow}
         onOpenProjects={openProjectsWindow}
         onOpenResume={openResumeWindow}
         onOpenContact={openContactWindow}
       />
- 
+
       {/* Taskbar */}
-<Taskbar
-  startMenuOpen={startMenuOpen}
 
-  welcomeOpen={welcomeOpen}
-  welcomeMinimized={welcomeMinimized}
-
-  aboutOpen={aboutOpen}
-  aboutMinimized={aboutMinimized}
-
-  projectsOpen={projectsOpen}
-  projectsMinimized={projectsMinimized}
-
-  resumeOpen={resumeOpen}
-  resumeMinimized={resumeMinimized}
-
-  contactOpen={contactOpen}
-  contactMinimized={contactMinimized}
-
-  projectDetailsOpen={selectedProject !== null}
-  projectDetailsMinimized={projectDetailsMinimized}
-  selectedProjectTitle={selectedProject?.title ?? ""}
-
-  activeWindow={activeWindow}
-
-  onToggleStartMenu={toggleStartMenu}
-  onShowDesktop={showDesktop}
-  onOpenWelcome={openWelcomeWindow}
-
-  onWelcomeTaskbarClick={handleWelcomeTaskbarClick}
-  onAboutTaskbarClick={handleAboutTaskbarClick}
-  onProjectsTaskbarClick={handleProjectsTaskbarClick}
-  onResumeTaskbarClick={handleResumeTaskbarClick}
-  onContactTaskbarClick={handleContactTaskbarClick}
-  onProjectDetailsTaskbarClick={
-    handleProjectDetailsTaskbarClick
-  }
-/>
+      <Taskbar
+        startMenuOpen={startMenuOpen}
+        welcomeOpen={welcomeOpen}
+        welcomeMinimized={welcomeMinimized}
+        aboutOpen={aboutOpen}
+        aboutMinimized={aboutMinimized}
+        projectsOpen={projectsOpen}
+        projectsMinimized={
+          projectsMinimized
+        }
+        resumeOpen={resumeOpen}
+        resumeMinimized={resumeMinimized}
+        contactOpen={contactOpen}
+        contactMinimized={
+          contactMinimized
+        }
+        projectDetailsOpen={
+          selectedProject !== null
+        }
+        projectDetailsMinimized={
+          projectDetailsMinimized
+        }
+        selectedProjectTitle={
+          selectedProject?.title ?? ""
+        }
+        activeWindow={activeWindow}
+        onToggleStartMenu={toggleStartMenu}
+        onShowDesktop={showDesktop}
+        onOpenWelcome={openWelcomeWindow}
+        onWelcomeTaskbarClick={
+          handleWelcomeTaskbarClick
+        }
+        onAboutTaskbarClick={
+          handleAboutTaskbarClick
+        }
+        onProjectsTaskbarClick={
+          handleProjectsTaskbarClick
+        }
+        onResumeTaskbarClick={
+          handleResumeTaskbarClick
+        }
+        onContactTaskbarClick={
+          handleContactTaskbarClick
+        }
+        onProjectDetailsTaskbarClick={
+          handleProjectDetailsTaskbarClick
+        }
+      />
     </main>
   );
 }
