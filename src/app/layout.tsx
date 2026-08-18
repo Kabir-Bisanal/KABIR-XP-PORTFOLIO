@@ -63,6 +63,32 @@ export const metadata: Metadata = {
       "An interactive Windows XP-inspired software-development portfolio.",
   },
 };
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  url: "https://kabirbisanal.com",
+  mainEntity: {
+    "@type": "Person",
+    name: "Kabir Bisanal",
+    url: "https://kabirbisanal.com",
+    description:
+      "Software developer and Computer Science and Engineering student building full-stack, data science, automation, and software projects.",
+    sameAs: [
+      "https://github.com/Kabir-Bisanal",
+      "https://www.linkedin.com/in/kabir-bisanal-638ba7276/",
+    ],
+    knowsAbout: [
+      "Software Development",
+      "Python",
+      "C#",
+      "SQL",
+      "Web Development",
+      "Data Science",
+      "Machine Learning",
+      "Automation",
+    ],
+  },
+};
 
 type RootLayoutProps = Readonly<{
   children: React.ReactNode;
@@ -74,9 +100,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {children}
-        <SpeedInsights />
-      </body>
+  <script
+    type="application/ld+json"
+    dangerouslySetInnerHTML={{
+      __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+    }}
+  />
+
+  {children}
+  <SpeedInsights />
+</body>
     </html>
   );
 }
