@@ -8,9 +8,10 @@
     "start": "next start",
     "lint": "eslint",
     "format": "prettier . --write --ignore-unknown",
-    "format:check" : "prettier . --check --ignore-unknown"
+    "format:check": "prettier . --check --ignore-unknown"
   },
   "dependencies": {
+    "@vercel/speed-insights": "^2.0.0",
     "next": "16.2.10",
     "react": "19.2.4",
     "react-dom": "19.2.4"

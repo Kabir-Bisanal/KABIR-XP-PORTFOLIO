@@ -1700,7 +1700,73 @@ saveWindowSize(
       stopDragging,
     );
   }
+function handleWindowTitleBarDoubleClick(
+  event: ReactMouseEvent<HTMLElement>,
+) {
+  const target = event.target as HTMLElement;
 
+  /*
+    Only respond when the user double-clicks
+    somewhere inside a window title bar.
+  */
+  const titleBar = target.closest(".xp-title-bar");
+
+  if (!titleBar) {
+    return;
+  }
+
+  /*
+    Double-clicking minimize, maximize or close
+    buttons must not trigger another maximize action.
+  */
+  if (target.closest(".window-controls")) {
+    return;
+  }
+
+  const windowElement = titleBar.closest(
+    ".xp-window",
+  ) as HTMLElement | null;
+
+  if (!windowElement) {
+    return;
+  }
+
+  const windowName =
+    getWindowNameFromElement(windowElement);
+
+  if (!windowName) {
+    return;
+  }
+
+  if (windowName === "welcome") {
+    toggleWelcomeMaximize();
+    return;
+  }
+
+  if (windowName === "about") {
+    toggleAboutMaximize();
+    return;
+  }
+
+  if (windowName === "projects") {
+    toggleProjectsMaximize();
+    return;
+  }
+
+  if (windowName === "resume") {
+    toggleResumeMaximize();
+    return;
+  }
+
+  if (windowName === "contact") {
+    toggleContactMaximize();
+    return;
+  }
+
+  if (windowName === "projectDetails") {
+    toggleProjectDetailsMaximize();
+  }
+}
   /* =========================================
      DESKTOP ICONS
   ========================================= */
@@ -1731,12 +1797,15 @@ saveWindowSize(
 
   return (
     <main
-      className="desktop"
-      onMouseDown={handleDesktopBackgroundClick}
-      onPointerDownCapture={
-        handleWindowResizePointerDown
-      }
-    >
+  className="desktop"
+  onMouseDown={handleDesktopBackgroundClick}
+  onPointerDownCapture={
+    handleWindowResizePointerDown
+  }
+  onDoubleClickCapture={
+    handleWindowTitleBarDoubleClick
+  }
+>
       <DesktopIcons
         selectedIcon={selectedDesktopIcon}
         onSelectIcon={setSelectedDesktopIcon}
