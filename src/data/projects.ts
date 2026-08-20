@@ -173,7 +173,7 @@ export const projects: PortfolioProject[] = [
     ],
 
     status:
-      "Feature-complete locally verified MVP - Deployment Pending",
+      "Live - Production Deployed",
 
     problem:
       "Topicora was created to provide a complete editorial publishing workflow rather than only a public blog interface. The goal was to support readers, editors and administrators through one system that handles article publishing, authentication, scheduling, revisions, newsletters, search, SEO, security and editorial operations.",
@@ -240,20 +240,22 @@ export const projects: PortfolioProject[] = [
     ],
 
     results: [
-      "27 unit tests passing across 13 Vitest files.",
+  "27 unit tests passing across 13 Vitest files.",
 
-      "13 verified browser workflow scenarios.",
+  "13 verified browser workflow scenarios.",
 
-      "Next.js production build succeeds.",
+  "Next.js production build succeeds with 75 generated route entries.",
 
-      "75 route entries generated during the production build.",
+  "Production PostgreSQL migrations successfully applied to Supabase.",
 
-      "Supabase schema lint reports no errors.",
+  "Protected administrator CMS authenticated and verified in production.",
 
-      "Versioned PostgreSQL database migrations apply successfully.",
+  "Article creation, category management and public publishing verified end-to-end.",
 
-      "Feature-complete local MVP prepared for production-service configuration and deployment.",
-    ],
+  "Contact submissions persist to the CMS and send real email notifications through Resend.",
+
+  "Public production deployment available at topicora.kabirbisanal.com.",
+],
 
     contribution:
       "I worked on Topicora as a full-stack publishing platform covering the public reader experience, protected CMS, authentication, database architecture, publishing workflows, newsletters, revisions, SEO, security controls, scheduled jobs, testing and deployment preparation.",
@@ -300,12 +302,12 @@ export const projects: PortfolioProject[] = [
       Topicora currently has a local Git repository,
       but no configured GitHub remote.
     */
-    githubUrl: "",
+    githubUrl: "https://github.com/Kabir-Bisanal/topicora",
 
     /*
       Topicora is not publicly deployed yet.
     */
-    demoUrl: "",
+    demoUrl: "https://topicora.kabirbisanal.com",
   },
 
   /* =========================================

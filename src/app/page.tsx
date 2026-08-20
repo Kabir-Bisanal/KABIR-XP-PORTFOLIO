@@ -1772,24 +1772,39 @@ function handleWindowTitleBarDoubleClick(
   ========================================= */
 
   function handleDesktopIcon(
-    iconId: DesktopIconId,
-  ) {
-    if (iconId === "about") {
-      openAboutWindow();
-    }
-
-    if (iconId === "projects") {
-      openProjectsWindow();
-    }
-
-    if (iconId === "resume") {
-      openResumeWindow();
-    }
-
-    if (iconId === "contact") {
-      openContactWindow();
-    }
+  iconId: DesktopIconId,
+) {
+  if (iconId === "about") {
+    openAboutWindow();
+    return;
   }
+
+  if (iconId === "projects") {
+    openProjectsWindow();
+    return;
+  }
+
+  if (iconId === "topicora") {
+    const topicoraProject = projects.find(
+      (project) => project.id === "topicora",
+    );
+
+    if (topicoraProject) {
+      openProjectDetails(topicoraProject);
+    }
+
+    return;
+  }
+
+  if (iconId === "resume") {
+    openResumeWindow();
+    return;
+  }
+
+  if (iconId === "contact") {
+    openContactWindow();
+  }
+}
 
   /* =========================================
      RENDER

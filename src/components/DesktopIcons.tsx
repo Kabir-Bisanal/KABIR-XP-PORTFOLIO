@@ -3,6 +3,7 @@
 export type DesktopIconId =
   | "about"
   | "projects"
+  | "topicora"
   | "resume"
   | "contact";
 
@@ -27,6 +28,11 @@ const desktopIcons: {
     id: "projects",
     icon: "📁",
     title: "My Projects",
+  },
+  {
+    id: "topicora",
+    icon: "📰",
+    title: "Topicora",
   },
   {
     id: "resume",
