@@ -4,8 +4,9 @@ export type DesktopIconId =
   | "about"
   | "projects"
   | "topicora"
+  |"smartstock"
   | "resume"
-  | "contact";
+  | "contact" ;
 
 type DesktopIconsProps = {
   selectedIcon: DesktopIconId | null;
@@ -34,6 +35,11 @@ const desktopIcons: {
     icon: "📰",
     title: "Topicora",
   },
+  {
+  id: "smartstock",
+  icon: "📊",
+  title: "SmartStock",
+},
   {
     id: "resume",
     icon: "📄",

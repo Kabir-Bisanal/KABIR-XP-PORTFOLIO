@@ -1796,6 +1796,18 @@ function handleWindowTitleBarDoubleClick(
     return;
   }
 
+  if (iconId === "smartstock") {
+    const smartStockProject = projects.find(
+      (project) => project.id === "smartstock",
+    );
+
+    if (smartStockProject) {
+      openProjectDetails(smartStockProject);
+    }
+
+    return;
+  }
+
   if (iconId === "resume") {
     openResumeWindow();
     return;

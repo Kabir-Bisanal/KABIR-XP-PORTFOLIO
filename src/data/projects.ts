@@ -46,7 +46,7 @@ export const projects: PortfolioProject[] = [
       "Docker",
     ],
 
-    status: "Completed - V1.0.0",
+    status: "Live - Public Demo",
 
     problem:
       "Retail inventory decisions depend on understanding future demand, but inaccurate forecasts can lead to either excess stock or shortages. The goal of SmartStock was to build an end-to-end system that turns historical sales data into demand forecasts and then converts those forecasts into practical inventory recommendations.",
@@ -95,6 +95,8 @@ export const projects: PortfolioProject[] = [
     ],
 
     results: [
+      "Pubic Streamlit demo deployed and verified end-to-end.",
+      
       "582K+ retail sales observations processed.",
 
       "86 automated tests passed with 0 failures.",
@@ -143,9 +145,9 @@ export const projects: PortfolioProject[] = [
       "Testing, reproducibility, documentation and deployment preparation.",
     ],
 
-    githubUrl: "",
+    githubUrl: "https://github.com/Kabir-Bisanal/SmartStock",
 
-    demoUrl: "",
+    demoUrl: "https://smartstock-kabir.streamlit.app",
   },
 
   /* =========================================
