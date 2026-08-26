@@ -78,15 +78,15 @@ button {
 
 .desktop-icons {
   position: absolute;
-  top: 18px;
-  left: 12px;
+  inset: 0 0 42px;
   z-index: 2;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+  pointer-events: none;
 }
 
 .desktop-icon {
+  position: absolute;
+  top: var(--desktop-icon-y);
+  left: var(--desktop-icon-x);
   display: flex;
   width: 95px;
   min-height: 75px;
@@ -98,14 +98,23 @@ button {
   color: white;
   background: transparent;
   border: 1px solid transparent;
+  pointer-events: auto;
+  user-select: none;
 }
 
-.desktop-icon:hover,
-.desktop-icon:focus-visible,
 .desktop-icon-selected {
   background: rgba(32, 88, 177, 0.5);
   border-color: rgba(255, 255, 255, 0.7);
-  outline: none;
+}
+
+.desktop-icon:focus-visible {
+  outline: 1px dotted white;
+  outline-offset: -2px;
+}
+
+.desktop-icon-dragging {
+  z-index: 1;
+  cursor: grabbing;
 }
 
 .desktop-icon-selected .desktop-icon-title {
@@ -130,6 +139,12 @@ button {
   text-shadow:
     1px 1px 2px black,
     -1px -1px 2px black;
+}
+
+@media (min-width: 701px) {
+  .desktop-icon {
+    touch-action: none;
+  }
 }
 
 /* =========================================
@@ -744,6 +759,8 @@ button {
 
   .desktop-icons {
     top: 10px;
+    right: auto;
+    bottom: auto;
     left: 8px;
     display: grid;
     grid-template-columns: repeat(2, 85px);
@@ -2607,6 +2624,7 @@ button {
   }
 
   .desktop-icon {
+    position: static;
     width: 82px;
     min-height: 70px;
     padding: 3px;
