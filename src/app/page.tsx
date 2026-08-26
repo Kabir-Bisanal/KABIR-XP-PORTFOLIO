@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import type {
   MouseEvent as ReactMouseEvent,
@@ -8,6 +8,7 @@ import type {
 } from "react";
 
 import WelcomeWindow from "@/components/WelcomeWindow";
+import BootScreen from "@/components/BootScreen";
 import ResumeWindow from "@/components/ResumeWindow";
 import ContactWindow from "@/components/ContactWindow";
 import AboutWindow from "@/components/AboutWindow";
@@ -39,6 +40,8 @@ type WindowName =
   | "resume"
   | "contact"
   | "projectDetails";
+
+type DesktopBootState = "hidden" | "entering" | "ready";
 
 const MIN_VISIBLE_WINDOW_WIDTH = 120;
 
@@ -259,6 +262,9 @@ export default function Home() {
      DESKTOP / START MENU STATE
   ========================================= */
 
+  const [desktopBootState, setDesktopBootState] =
+    useState<DesktopBootState>("hidden");
+
   const [startMenuOpen, setStartMenuOpen] =
     useState(false);
 
@@ -269,6 +275,14 @@ export default function Home() {
 
   const [activeWindow, setActiveWindow] =
     useState<WindowName>("welcome");
+
+  const startDesktopBoot = useCallback(() => {
+    setDesktopBootState("entering");
+  }, []);
+
+  const finishDesktopBoot = useCallback(() => {
+    setDesktopBootState("ready");
+  }, []);
 
   /* =========================================
      REAPPLY CUSTOM WINDOW SIZES
@@ -1823,16 +1837,15 @@ function handleWindowTitleBarDoubleClick(
   ========================================= */
 
   return (
-    <main
-  className="desktop"
-  onMouseDown={handleDesktopBackgroundClick}
-  onPointerDownCapture={
-    handleWindowResizePointerDown
-  }
-  onDoubleClickCapture={
-    handleWindowTitleBarDoubleClick
-  }
->
+    <>
+      <main
+        className={`desktop desktop-${desktopBootState}`}
+        aria-hidden={desktopBootState !== "ready"}
+        inert={desktopBootState !== "ready"}
+        onMouseDown={handleDesktopBackgroundClick}
+        onPointerDownCapture={handleWindowResizePointerDown}
+        onDoubleClickCapture={handleWindowTitleBarDoubleClick}
+      >
       <DesktopIcons
         selectedIcon={selectedDesktopIcon}
         onSelectIcon={setSelectedDesktopIcon}
@@ -2053,6 +2066,12 @@ function handleWindowTitleBarDoubleClick(
           handleProjectDetailsTaskbarClick
         }
       />
-    </main>
+      </main>
+
+      <BootScreen
+        onStart={startDesktopBoot}
+        onFinish={finishDesktopBoot}
+      />
+    </>
   );
 }

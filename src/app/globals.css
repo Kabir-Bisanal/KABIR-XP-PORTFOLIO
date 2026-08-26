@@ -26,6 +26,160 @@ button {
 }
 
 /* =========================================
+   WINDOWS XP-INSPIRED STARTUP
+========================================= */
+
+.boot-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  box-sizing: border-box;
+  place-items: center;
+  margin: 0;
+  padding: 24px;
+  overflow: hidden;
+  color: white;
+  font-family: Tahoma, Verdana, Arial, sans-serif;
+  text-align: center;
+  background: linear-gradient(
+    to bottom,
+    #001956 0%,
+    #00358f 18%,
+    #c87c17 18%,
+    #f0ad36 18.6%,
+    #438bd4 18.6%,
+    #72b2eb 52%,
+    #397dca 81.4%,
+    #eead3d 81.4%,
+    #bf7013 82%,
+    #00358f 82%,
+    #001956 100%
+  );
+  border: 0;
+  border-radius: 0;
+  appearance: none;
+}
+
+.boot-screen::before {
+  content: "";
+  position: absolute;
+  inset: 18.6% 0 18%;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at 50% 46%,
+    rgba(255, 255, 255, 0.2),
+    transparent 44%
+  );
+}
+
+.boot-screen-checking {
+  cursor: default;
+}
+
+.boot-screen-center {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.boot-screen-welcome {
+  font-size: clamp(54px, 8vw, 84px);
+  font-style: italic;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -3px;
+  text-shadow:
+    1px 2px 0 rgba(0, 39, 105, 0.75),
+    0 0 12px rgba(255, 255, 255, 0.18);
+}
+
+.boot-screen-instruction {
+  margin-top: 23px;
+  font-size: 14px;
+  line-height: 1.4;
+  letter-spacing: 0.2px;
+  opacity: 0.78;
+  text-shadow: 1px 1px 1px rgba(0, 35, 91, 0.85);
+}
+
+.boot-screen:hover .boot-screen-instruction,
+.boot-screen:focus-visible .boot-screen-instruction {
+  opacity: 1;
+}
+
+.boot-screen:focus-visible {
+  outline: 2px dotted #fff3a8;
+  outline-offset: -7px;
+}
+
+.boot-screen-starting {
+  pointer-events: none;
+  animation: boot-screen-exit 550ms ease-in 1350ms forwards;
+}
+
+.desktop-hidden {
+  opacity: 0;
+}
+
+.desktop-entering {
+  animation: desktop-boot-entry 550ms ease-out 1350ms both;
+}
+
+.desktop-ready {
+  opacity: 1;
+}
+
+@keyframes boot-screen-exit {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes desktop-boot-entry {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boot-screen-starting,
+  .desktop-entering {
+    animation-delay: 0ms;
+    animation-duration: 150ms;
+    animation-timing-function: linear;
+  }
+}
+
+@media (max-width: 700px) {
+  .boot-screen {
+    padding: 18px;
+  }
+
+  .boot-screen-welcome {
+    font-size: clamp(49px, 17vw, 68px);
+    letter-spacing: -2px;
+  }
+
+  .boot-screen-instruction {
+    margin-top: 18px;
+    font-size: 13px;
+  }
+}
+
+/* =========================================
    WINDOWS XP DESKTOP
 ========================================= */
 
