@@ -160,7 +160,7 @@ export const projects: PortfolioProject[] = [
     title: "Topicora",
 
     description:
-      "A full-stack editorial publishing and content-management platform built with Next.js, Supabase, PostgreSQL and TypeScript.",
+      "A full-stack editorial publishing and content-management platform built with Next.js, Supabase, PostgreSQL, and TypeScript.",
 
     technologies: [
       "Next.js",
@@ -178,10 +178,10 @@ export const projects: PortfolioProject[] = [
       "Live - Production Deployed",
 
     problem:
-      "Topicora was created to provide a complete editorial publishing workflow rather than only a public blog interface. The goal was to support readers, editors and administrators through one system that handles article publishing, authentication, scheduling, revisions, newsletters, search, SEO, security and editorial operations.",
+      "Topicora was created to provide a structured editorial workflow rather than only a public blog interface. The goal was to bring content creation, publishing, authentication, revisions, search, newsletters, SEO, and administrative operations into a single application.",
 
     overview:
-      "Topicora is an India-first English editorial publication and content-management platform. It contains both a responsive public publication for readers and a protected CMS for editorial staff. The application supports article creation and publishing, scheduled publication, revisions, role-based administration, MFA-aware authorization, full-text search, newsletters, media storage, SEO metadata, RSS, audit logging and production-oriented security controls.",
+      "Topicora is a full-stack editorial publishing platform with a responsive public-facing site and a protected CMS. The application supports article creation and publishing, scheduled publication, revisions, role-based administration, authentication, full-text search, newsletters, media storage, SEO metadata, RSS, audit logging, and security controls.",
 
     technicalDecisions: [
       "Used the Next.js App Router with React Server Components, Server Actions and Route Handlers to keep public reads and trusted mutations primarily on the server.",
